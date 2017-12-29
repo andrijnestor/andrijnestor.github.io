@@ -18,27 +18,7 @@ function addProduct(product, scene)
 	addProfile(1, product.l / 2, hProfil / 2 + product.hBot, -product.w / 2, product, scene);
 	addProfile(2, -product.l / 2, hProfil / 2 + product.hBot, product.w / 2, product, scene);
 	addProfile(3, product.l / 2, hProfil / 2 + product.hBot, product.w / 2, product, scene);	
-/*
-	product.profile[0] = new THREE.Mesh(product.profileG, product.profileMat);
-	product.profile[0].position.set(-product.l / 2, hProfil / 2 + product.hBot, -product.w / 2);
-	product.profile[0].castShadow = true;
-	scene.add(product.profile[0]);
 
-	product.profile[1] = new THREE.Mesh(product.G, product.profileMat);
-	product.profile[1].position.set(product.l / 2, hProfil / 2 + product.hBot, -product.w / 2);
-	product.profile[1].castShadow = true;
-	scene.add(product.profile[1]);
-
-	product.profile[2] = new THREE.Mesh(product.horisontalG, product.profileMat);
-	product.profile[2].position.set(-product.l / 2, hProfil / 2 + product.hBot, product.w / 2);
-	product.profile[2].castShadow = true;
-	scene.add(product.profile[2]);
-
-	product.profile[3] = new THREE.Mesh(product.horisontalG, product.profileMat);
-	product.profile[3].position.set(product.l / 2, hProfil / 2 + product.hBot, product.w / 2);
-	product.profile[3].castShadow = true;
-	scene.add(product.profile[3]);
-*/
 	var wProfil = product.w - product.profileThick;
 	product.profileG = new THREE.BoxGeometry(product.profileThick, product.profileThick, wProfil);
 
@@ -55,27 +35,50 @@ function addProduct(product, scene)
 
 	product.profileLen = hProfil * 4 + wProfil * 4 + lProfil * 2;
 
+}
 
-
-
-
-
-
-
-
-
-
-
-
+function addProfileMaterial(index, product, mat1, mat2, mat3)
+{
+	product.profileMat[index] = new THREE.MeshStandardMaterial( {
+		roughness: 0.7,
+		color: 0xffffff,
+		bumpScale: 0.002,
+		metalness: 0.5
+	} );
+	var texturesLoader = new THREE.TextureLoader();
+	texturesLoader.load( mat1 , function( map ) {
+		map.wrapS = THREE.RepeatWrapping;
+		map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 4;
+		map.repeat.set( 50, 120 );
+		product.profileMat[index].map = map;
+		product.profileMat[index].needsUpdate = true;
+	} );
+	
+	texturesLoader.load( mat2, function( map ) {
+		map.wrapS = THREE.RepeatWrapping;
+		map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 4;
+		map.repeat.set( 10, 24 );
+		product.profileMat[index].bumpMap = map;
+		product.profileMat[index].needsUpdate = true;
+	} );
+	texturesLoader.load( mat3, function( map ) {
+		map.wrapS = THREE.RepeatWrapping;
+		map.wrapT = THREE.RepeatWrapping;
+		map.anisotropy = 4;
+		map.repeat.set( 10, 24 );
+		product.profileMat[index].roghnessMap = map;
+		product.profileMat[index].needsUpdate = true;
+	} );
 }
 
 function addProfile(n, l, h, w, product, scene)
 {
-	product.profile[n] = new THREE.Mesh(product.profileG, product.profileMat);
+	product.profile[n] = new THREE.Mesh(product.profileG, product.profileMat[product.profileColor]);
 	product.profile[n].position.set(l, h, w);
 	product.profile[n].castShadow = true;
 	scene.add(product.profile[n]);
-
 }
 
 function delProduct(product, scene)
@@ -83,9 +86,4 @@ function delProduct(product, scene)
 	var n = 0;
 	while (product.profile[n])
 		scene.remove(product.profile[n++]);
-
-//	scene.remove(product.horisontalM[1]);
-//	scene.remove(product.horisontalM[2]);
-//	scene.remove(product.horisontalM[3]);
-
 }
