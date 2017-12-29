@@ -93,7 +93,8 @@
 				h: 0.75,
 				w: 0.6,
 				l: 1.1,
-				profileLen: 0.1
+				profileLen: 0.1,
+				test: 0
 			};
 			var clock = new THREE.Clock();
 		
@@ -217,6 +218,8 @@
 				gui.add( params, 'w', 0, 1 );
 				gui.add( params, 'l', 0, 2.8 );
 				gui.add( params, 'profileLen').listen();
+			//	if (params.h > 2)
+			//		gui.add(params, 'test');
 				gui.open();
 			}
 /*
@@ -255,6 +258,13 @@
 			function animate() {
 				requestAnimationFrame( animate );
 		//		params.profileLen = product.profileLen;
+		//		var gui2 = new dat.GUI();
+		//		var fff;
+		//		if (product.h > 2)
+		//			fff = gui2.add(params, 'h', 0, 2.8);
+		//		else
+		//			gui2.destroy();
+
 				render();
 			}
 			
@@ -285,13 +295,13 @@
 
 				renderer.render( scene, camera );
 				stats.update();
-				gui2.close();	
-				var gui2 = new dat.GUI();
-				gui2.add( params, 'h', 0, 2.8 );
+		//		gui2.close();	
+		//		var gui2 = new dat.GUI();
+		//		gui2.add( params, 'h', 0, 2.8 );
 		//		gui2.add( params, 'w', 0, 1 );
 		//		gui2.add( params, 'l', 0, 2.8 );
 		//		gui2.add( params, 'profileLen').listen();
-				qui2.open();
+		//		qui2.open();
 			}
 		</script>
 	</body>
