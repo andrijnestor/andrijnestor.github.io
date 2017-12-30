@@ -42,11 +42,14 @@
 		<script src="js/dat.gui.min.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/Detector.js"></script>
+		<script src="js/BufferSubdivisionModifier.js"></script>
 		<script src="sub.js"></script>
 
 		<script>
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			
+			var gui;
+			var vFolders = [];
 			var scale = 1;
 			var camera, scene, renderer,
 			bulbLight, bulbMat, hemiLight,
@@ -83,16 +86,32 @@
 				"White": 1,
 				"Black": 2
 			};
-
+			var woodColorChoose = {
+				"White": 0,
+				"Grey": 1,
+				"Black": 2,
+				"Oak1": 3,
+				"Oak2": 4
+			};
+			var segmentOptions = {
+				"Shelfs": 0,
+				"Door with inner shelfs": 1,
+				"Divide": 2
+			}
 			var params = {
 				shadows: true,
-				exposure: 0.68,
+				exposure: 0.25, //0.68
 				bulbPower: Object.keys(bulbLuminousPowers)[4],
-				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0],
+				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[4],
 				profileColor: Object.keys(profileColorChoose)[0],
+				woodColor: Object.keys(woodColorChoose)[0],
 				h: 0.75,
 				w: 0.6,
 				l: 1.1,
+				options: Object.keys(segmentOptions)[0],
+				quantity: 0,
+		//		vDivide: 0,
+			//	segment: 'segment',
 				profileLen: 0.1,
 				test: 0
 			};
@@ -109,8 +128,12 @@
 				camera.position.x = -1 * scale;
 				camera.position.z = 2 * scale;
 				camera.position.y = 2 * scale;
+
 				scene = new THREE.Scene();
-				var bulbGeometry = new THREE.SphereGeometry( 0.02 * scale, 16 * scale, 8 * scale);
+				scene.background = new THREE.Color( 0xcce0ff );
+				scene.fog = new THREE.Fog( 0xcce0ff, 2, 10 );
+
+				var bulbGeometry = new THREE.SphereGeometry( 0.02, 16, 8 );
 				bulbLight = new THREE.PointLight( 0xffee88, 1, 100, 2);
 				bulbMat = new THREE.MeshStandardMaterial( {
 					emissive: 0xffffee,
@@ -134,10 +157,11 @@
 
 				floorMat = new THREE.MeshStandardMaterial( {
 					roughness: 0.8,
-					color: 0xffffff,
+					color: 0xd0aab5,
 					metalness: 0.2,
 					bumpScale: 0.0005
 				});
+				/*
 				var textureLoader = new THREE.TextureLoader();
 				textureLoader.load( "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg", function( map ) {
 					map.wrapS = THREE.RepeatWrapping;
@@ -164,7 +188,7 @@
 					floorMat.roughnessMap = map;
 					floorMat.needsUpdate = true;
 				} );
-
+*/
 				var floorGeometry = new THREE.PlaneBufferGeometry( 20 * scale, 20 * scale);
 				var floorMesh = new THREE.Mesh( floorGeometry, floorMat );
 				floorMesh.receiveShadow = true;
@@ -179,17 +203,22 @@
 			//	product.l = 0.6;
 		//		product.profileColor = 0;
 				product.profile = [];
-		//		product.profileLen = 0;
+		//		product.wood = [][];
+				product.mainSegmentStatus = 0;
+				product.segmentQuantityPrev = 0;
+				product.segmentQuantity = 0;
+				product.profileLen = 0;
+				product.topSquare = 0;
 				product.profileThick = 0.03 * scale;
-				product.hTop = 0.025 * scale;
-				product.hBot = 0.025 * scale;
+				product.topThick = 0.025 * scale;
+				product.botThick = 0.025 * scale;
 				product.profileMat = [];
 				addProfileMaterial(0, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/metal.jpg");
 				addProfileMaterial(1, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
 				addProfileMaterial(2, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
 				product.woodMat = [];
-				//addWoodMaterial
-
+				addWoodMaterial(0, product, "textures/hardwood2_diffuse.jpg");
+				addWoodMaterial(4, product, "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
 
 
 		//		addProduct(product);
@@ -207,20 +236,7 @@
 			
 				var controls = new THREE.OrbitControls( camera, renderer.domElement );
 				window.addEventListener( 'resize', onWindowResize, false );
-				
-				var gui = new dat.GUI();
-				gui.add( params, 'hemiIrradiance', Object.keys( hemiLuminousIrradiances ) );
-				gui.add( params, 'bulbPower', Object.keys( bulbLuminousPowers ) );
-				gui.add( params, 'exposure', 0, 1 );
-				gui.add( params, 'shadows' );
-				gui.add( params, 'profileColor', Object.keys( profileColorChoose ) );
-				gui.add( params, 'h', 0, 2.8 );
-				gui.add( params, 'w', 0, 1 );
-				gui.add( params, 'l', 0, 2.8 );
-				gui.add( params, 'profileLen').listen();
-			//	if (params.h > 2)
-			//		gui.add(params, 'test');
-				gui.open();
+				guiCreate();
 			}
 /*
 			function addSomething(textureLoader, x, y, z, sizeX, sizeY, sizeZ) {
@@ -257,14 +273,6 @@
 			
 			function animate() {
 				requestAnimationFrame( animate );
-		//		params.profileLen = product.profileLen;
-		//		var gui2 = new dat.GUI();
-		//		var fff;
-		//		if (product.h > 2)
-		//			fff = gui2.add(params, 'h', 0, 2.8);
-		//		else
-		//			gui2.destroy();
-
 				render();
 			}
 			
@@ -286,22 +294,36 @@
 				product.l = params.l * scale;
 				product.w = params.w * scale;
 				product.profileColor = profileColorChoose[params.profileColor];
+				product.woodColor = woodColorChoose[params.woodColor];
 				delProduct(product, scene);
 				addProduct(product, scene);
 				params.profileLen = product.profileLen;
 		//		bulbLight.position.y = Math.cos( time ) * 0.75 + 1.25;
 		//		scene.remove( bulbLight );
 		//		scene.add( bulbLight );
-
+			
+				if (segmentOptions[params.options] == 2)
+					product.segmentQuantity = params.quantity;
+				if (/*product.segmentQuantity != product.segmentQuantityPrev ||*/ product.mainSegmentStatus != segmentOptions[params.options])
+				{
+					product.mainSegmentStatus = segmentOptions[params.options];
+			//	//	product.segmentQuantityPrev = product.segmentQuantity;
+					gui.destroy();
+					guiCreate();
+				}
+				if (product.segmentQuantity != product.segmentQuantityPrev)
+				{
+					for (var i = 0; i < product.segmentQuantityPrev; i++)
+						gui.remove(vFolders[i]);
+					product.segmentQuantityPrev = product.segmentQuantity;
+					for (var i = 0; i < params.quantity; i++)
+		 			{
+						vFolders[i] = gui.add( params, 'test' );
+		  			}
+				}
+		  		
 				renderer.render( scene, camera );
 				stats.update();
-		//		gui2.close();	
-		//		var gui2 = new dat.GUI();
-		//		gui2.add( params, 'h', 0, 2.8 );
-		//		gui2.add( params, 'w', 0, 1 );
-		//		gui2.add( params, 'l', 0, 2.8 );
-		//		gui2.add( params, 'profileLen').listen();
-		//		qui2.open();
 			}
 		</script>
 	</body>
