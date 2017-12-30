@@ -31,11 +31,7 @@
 	<body>
 
 		<div id="container"></div>
-		<div id="info">
-			<a href="http://threejs.org" target="_blank" rel="noopener">three.js</a> - Physically accurate lighting example using a incandescent bulb - by <a href="http://clara.io" target="_blank" rel="noopener">Ben Houston</a><br />
-			Using real world scale: Brick cube is 1 meter in size.  Light is 2 meters from floor.  Globe is 25 cm in diameter.<br/>
-			Using Reinhard inline tonemapping with real-world light falloff (decay = 2).
-		</div>
+
 
 		<script src="js/three.js"></script>
 		<script src="js/stats.min.js"></script>
@@ -100,8 +96,8 @@
 			}
 			var params = {
 				shadows: true,
-				exposure: 0.25, //0.68
-				bulbPower: Object.keys(bulbLuminousPowers)[4],
+				exposure: 0.68, //0.68
+				bulbPower: Object.keys(bulbLuminousPowers)[2],
 				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[4],
 				profileColor: Object.keys(profileColorChoose)[0],
 				woodColor: Object.keys(woodColorChoose)[0],
@@ -141,7 +137,7 @@
 					color: 0x000000
 				});
 				bulbLight.add( new THREE.Mesh( bulbGeometry, bulbMat ) );
-				bulbLight.position.set( 0, 2 * scale, 0 );
+				bulbLight.position.set( 0, 2 * scale, 2 );
 				bulbLight.castShadow = true;
 
 
@@ -194,9 +190,6 @@
 				floorMesh.receiveShadow = true;
 				floorMesh.rotation.x = -Math.PI / 2.0;
 				scene.add( floorMesh );
-
-			//	addSomething(textureLoader, 1, 0.5, 1, 0.5, 32, 32);
-			//	addSomething1(product, textureLoader, 2, 1, 1, 1, 40, 40);
 				
 			//	product.h = 0.75;
 			//	product.w = 1;
@@ -213,12 +206,15 @@
 				product.topThick = 0.025 * scale;
 				product.botThick = 0.025 * scale;
 				product.profileMat = [];
-				addProfileMaterial(0, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/metal.jpg");
-				addProfileMaterial(1, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
-				addProfileMaterial(2, product,"https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
+				addProfileMaterial(0, product, 0xe5e5e5, 0.8);
+				addProfileMaterial(1, product, 0xffffff, 0.5);
+				addProfileMaterial(2, product, 0x131313, 0.9);
 				product.woodMat = [];
-				addWoodMaterial(0, product, "textures/hardwood2_diffuse.jpg");
-				addWoodMaterial(4, product, "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg");
+				addWoodMaterial(0, product, 0xffffff);
+				addWoodMaterial(1, product, 0x797979);
+				addWoodMaterial(2, product, 0x000000);
+				addWoodMaterial(3, product, 0xffffff, "textures/o01.jpg", "textures/o02.jpg", "textures/o03.jpg");
+				addWoodMaterial(4, product, 0xffffff, "textures/o11.jpg", "textures/o12.jpg", "textures/o13.jpg");
 
 
 		//		addProduct(product);
@@ -238,32 +234,7 @@
 				window.addEventListener( 'resize', onWindowResize, false );
 				guiCreate();
 			}
-/*
-			function addSomething(textureLoader, x, y, z, sizeX, sizeY, sizeZ) {
-				ballMat = new THREE.MeshStandardMaterial( {
-					color: 0xffffff,
-					roughness: 0.5,
-					metalness: 1.0
-				} );
-				textureLoader.load( "textures/planets/earth_atmos_2048.jpg", function( map ) {
-					map.anisotropy = 4;
-					ballMat.map = map;
-					ballMat.needsUpdate = true;
-				} );
-				textureLoader.load( "textures/planets/earth_specular_2048.jpg", function( map ) {
-					map.anisotropy = 4;
-					ballMat.metalnessMap = map;
-					ballMat.needsUpdate = true;
-				} );		
 
-				var ballGeometry = new THREE.SphereGeometry(sizeX, sizeY, sizeZ);
-				var ballMesh = new THREE.Mesh( ballGeometry, ballMat );
-				ballMesh.position.set( x, y, z );
-				ballMesh.rotation.y = Math.PI;
-				ballMesh.castShadow = true;
-				scene.add( ballMesh );
-			}
-			*/
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();

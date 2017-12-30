@@ -1,14 +1,5 @@
 
 
-function addSomething1(product, textureLoader, x, y, z, sizeX, sizeY, sizeZ) {
-	product.ballGeometry = new THREE.SphereGeometry(sizeX, sizeY, sizeZ);
-	product.ballMesh = new THREE.Mesh( product.ballGeometry, ballMat );
-	product.ballMesh.position.set( x, y, z );
-	product.ballMesh.rotation.y = Math.PI;
-	product.ballMesh.castShadow = true;
-	scene.add(product.ballMesh);
-}
-
 function addProduct(product, scene)
 {
 	var half = product.profileThick / 2;
@@ -47,11 +38,11 @@ function addProduct(product, scene)
 
 }
 
-function addWoodMaterial(index, product, mat1, mat2, mat3)
+function addWoodMaterial(index, product, colorMat, mat1, mat2, mat3)
 {
 	product.woodMat[index] = new THREE.MeshStandardMaterial( {
 		roughness: 0.7,
-		color: 0xffffff,
+		color: colorMat,
 		bumpScale: 0.002,
 		metalness: 0.5
 	} );
@@ -61,7 +52,7 @@ function addWoodMaterial(index, product, mat1, mat2, mat3)
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( 1, 2.4 );
+		map.repeat.set( product.l * 2, product.w * 2);
 		product.woodMat[index].map = map;
 		product.woodMat[index].needsUpdate = true;
 	} );
@@ -69,7 +60,7 @@ function addWoodMaterial(index, product, mat1, mat2, mat3)
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( 1, 2.4 );
+		map.repeat.set( product.l * 2, product.w * 2);
 		product.woodMat[index].bumpMap = map;
 		product.woodMat[index].needsUpdate = true;
 	} );
@@ -77,19 +68,19 @@ function addWoodMaterial(index, product, mat1, mat2, mat3)
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( 1, 2.4 );
+		map.repeat.set( product.l * 2, product.w * 2);
 		product.woodMat[index].roghnessMap = map;
 		product.woodMat[index].needsUpdate = true;
 	} );
 }
 
-function addProfileMaterial(index, product, mat1, mat2, mat3)
+function addProfileMaterial(index, product, colorMat, metalMat, mat1, mat2, mat3)
 {
 	product.profileMat[index] = new THREE.MeshStandardMaterial( {
-		roughness: 0.7,
-		color: 0xffffff,
+		roughness: 0.0,
+		color: colorMat,
 		bumpScale: 0.002,
-		metalness: 0.5
+		metalness: metalMat
 	} );
 	var texturesLoader = new THREE.TextureLoader();
 	texturesLoader.load( mat1 , function( map ) {
