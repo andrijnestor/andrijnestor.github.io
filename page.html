@@ -233,7 +233,7 @@
 
 		//		addProduct(product);
 
-				renderer = new THREE.WebGLRenderer();
+				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.physicallyCorrectLights = true;
 				renderer.gammaInput = true;
 				renderer.gammaOutput = true;
