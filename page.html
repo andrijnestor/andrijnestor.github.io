@@ -45,7 +45,8 @@
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			
 			var gui;
-			var vFolders = [];
+			var vOptions = [];
+			var vQuantity = [];
 			var scale = 1;
 			var camera, scene, renderer,
 			bulbLight, bulbMat, hemiLight,
@@ -92,7 +93,8 @@
 			var segmentOptions = {
 				"Shelfs": 0,
 				"Door with inner shelfs": 1,
-				"Divide": 2
+				"Drawers": 2,
+				"Divide": 3
 			}
 			var params = {
 				shadows: true,
@@ -111,6 +113,15 @@
 				profileLen: 0.1,
 				test: 0
 			};
+			var segmentParams = {
+				index: 0,
+				options: Object.keys(segmentOptions)[0],
+				quantity: 0
+			};
+			var testtest = [];
+			for(var g = 0; g != 20; g++)
+				testtest[g] = segmentParams;
+
 			var clock = new THREE.Clock();
 		
 			init();
@@ -273,26 +284,34 @@
 		//		scene.remove( bulbLight );
 		//		scene.add( bulbLight );
 			
-				if (segmentOptions[params.options] == 2)
-					product.segmentQuantity = params.quantity;
-				if (/*product.segmentQuantity != product.segmentQuantityPrev ||*/ product.mainSegmentStatus != segmentOptions[params.options])
-				{
-					product.mainSegmentStatus = segmentOptions[params.options];
+
+	//			if (product.mainSegmentStatus != segmentOptions[params.options])
+	//			{
+	//				product.mainSegmentStatus = segmentOptions[params.options];
 			//	//	product.segmentQuantityPrev = product.segmentQuantity;
-					gui.destroy();
-					guiCreate();
-				}
+	//				gui.destroy();
+	//				guiCreate();
+	//			}
+				
+				if (segmentOptions[params.options] == 3)
+					product.segmentQuantity = params.quantity;
 				if (product.segmentQuantity != product.segmentQuantityPrev)
 				{
-					for (var i = 0; i < product.segmentQuantityPrev; i++)
-						gui.remove(vFolders[i]);
+					segmentParams.options = 0;
+					segmentParams.quantity = 0;
+					for (var i = 0; i < product.segmentQuantityPrev; i++) // some problems
+					{
+						gui.remove(vOptions[i]);
+						gui.remove(vQuantity[i]);
+					}
 					product.segmentQuantityPrev = product.segmentQuantity;
 					for (var i = 0; i < params.quantity; i++)
 		 			{
-						vFolders[i] = gui.add( params, 'test' );
+						vOptions[i] = gui.add(segmentParams, 'options', Object.keys(segmentOptions)).name('▪▪ Segment ' + (i + 1));
+						vQuantity[i] = gui.add(segmentParams, 'quantity', 0, 10).step(1).name('▪▪ Quantity ' + (i + 1));
 		  			}
 				}
-		  		
+
 				renderer.render( scene, camera );
 				stats.update();
 			}

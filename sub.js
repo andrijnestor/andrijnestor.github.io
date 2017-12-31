@@ -127,32 +127,20 @@ function delProduct(product, scene)
 
 function guiCreate()
 {
-	params.quantity = 0; // ned to be set to needed value
+	params.quantity = 0; // ned to be set to needed value (or dont)
 	gui = new dat.GUI();
 	gui.add( params, 'hemiIrradiance', Object.keys( hemiLuminousIrradiances ) );
 	gui.add( params, 'bulbPower', Object.keys( bulbLuminousPowers ) );
 	gui.add( params, 'exposure', 0, 1 );
 	gui.add( params, 'shadows' );
-	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) );
-	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) );
-	gui.add( params, 'h', 0.2, 2 );
-	gui.add( params, 'w', 0.2, 1 );
-	gui.add( params, 'l', 0.2, 2 );
-	gui.add( params, 'options', Object.keys( segmentOptions) );
-/*
-	if (segmentOptions[params.options] == 0)
-	{
-		                          //// handle max 
-	}
-	else if (segmentOptions[params.options] == 1)
-	{
-	}
-	else if (segmentOptions[params.options] == 2)
-	{
-		                              ///// handle max
-	}
-*/	
-	gui.add( params, 'quantity', 0, 10 ).step(1); //handle max
+	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Profile color');
+	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Wood color');
+	gui.add( params, 'h', 0.2, 2 ).name('▪ Height');
+	gui.add( params, 'w', 0.2, 1 ).name('▪ Width');
+	gui.add( params, 'l', 0.2, 2 ).name('▪ Length');
+	gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Options');
+
+	gui.add( params, 'quantity', 0, 10 ).step(1).name('▪ Quantity'); //handle max
 //	for (var i = 0; i < params.vDivide; i++)
 //	{
 //		if (params.vDivide > 0)
@@ -166,5 +154,10 @@ function guiCreate()
 //	if (product.segmentQuantity > 0)
 //		gui.add( params, 'test' );
 //	}
+	//var ggg = gui.add(params, 'test');
+//	gui.add(params, 'test');
+//	gui.hide(ggg);
+
+//	ggg.domElement.setAttribute("hidden", true);
 	gui.open();
 }
