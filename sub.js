@@ -125,6 +125,24 @@ function delProduct(product, scene)
 	scene.remove(product.topW);
 }
 
+function guiRemoveSegm(from, to)
+{
+	for (var i = from; i < to; i++) // some problems
+	{
+		gui.remove(vOptions[i]);
+		gui.remove(vQuantity[i]);
+	}
+}
+
+function guiAddSegm(from, to)
+{
+	for (var i = from; i < to; i++)
+	{
+		vOptions[i] = gui.add(segmentParams, 'options', Object.keys(segmentOptions)).name('▪▪ Section ' + (i + 1));
+		vQuantity[i] = gui.add(segmentParams, 'quantity', 0, 10).step(1).name('▪▪ Quantity ' + (i + 1));
+	}
+}
+
 function guiCreate()
 {
 	params.quantity = 0; // ned to be set to needed value (or dont)
@@ -135,12 +153,12 @@ function guiCreate()
 	gui.add( params, 'shadows' );
 	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Profile color');
 	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Wood color');
-	gui.add( params, 'h', 0.2, 2 ).name('▪ Height');
-	gui.add( params, 'w', 0.2, 1 ).name('▪ Width');
-	gui.add( params, 'l', 0.2, 2 ).name('▪ Length');
+	gui.add( params, 'h', 0.2, 2 ).name('▪ Height (m)').step(0.01);
+	gui.add( params, 'w', 0.2, 1 ).name('▪ Width (m)').step(0.01);
+	gui.add( params, 'l', 0.2, 2 ).name('▪ Length (m)').step(0.01);
 	gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Options');
 
-	gui.add( params, 'quantity', 0, 10 ).step(1).name('▪ Quantity'); //handle max
+	//gui.add( params, 'quantity').step(1).name('▪ Quantity').min(0).max(params.l / 0.2).listen().updateDisplay(); //handle max
 //	for (var i = 0; i < params.vDivide; i++)
 //	{
 //		if (params.vDivide > 0)

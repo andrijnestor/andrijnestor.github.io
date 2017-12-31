@@ -35,7 +35,7 @@
 
 		<script src="js/three.js"></script>
 		<script src="js/stats.min.js"></script>
-		<script src="js/dat.gui.min.js"></script>
+		<script src="js/dat.gui.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/BufferSubdivisionModifier.js"></script>
@@ -47,6 +47,7 @@
 			var gui;
 			var vOptions = [];
 			var vQuantity = [];
+			var mQuantity;
 			var scale = 1;
 			var camera, scene, renderer,
 			bulbLight, bulbMat, hemiLight,
@@ -102,7 +103,7 @@
 				bulbPower: Object.keys(bulbLuminousPowers)[2],
 				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[4],
 				profileColor: Object.keys(profileColorChoose)[0],
-				woodColor: Object.keys(woodColorChoose)[0],
+				woodColor: Object.keys(woodColorChoose)[4],
 				h: 0.75,
 				w: 0.6,
 				l: 1.1,
@@ -208,8 +209,10 @@
 		//		product.profileColor = 0;
 				product.profile = [];
 		//		product.wood = [][];
+				product.lPrev = -1;
+				product.hPrev = -1;
 				product.mainSegmentStatus = 0;
-				product.segmentQuantityPrev = 0;
+				product.segmentQuantityPrev = -1;
 				product.segmentQuantity = 0;
 				product.profileLen = 0;
 				product.topSquare = 0;
@@ -284,32 +287,86 @@
 		//		scene.remove( bulbLight );
 		//		scene.add( bulbLight );
 			
-
-	//			if (product.mainSegmentStatus != segmentOptions[params.options])
-	//			{
-	//				product.mainSegmentStatus = segmentOptions[params.options];
+/*
+				if (product.mainSegmentStatus != segmentOptions[params.options])
+				{
+					product.mainSegmentStatus = segmentOptions[params.options];
 			//	//	product.segmentQuantityPrev = product.segmentQuantity;
-	//				gui.destroy();
-	//				guiCreate();
-	//			}
-				
+					gui.destroy();
+					guiCreate();
+				}
+				if (product.lPrev != product.l)
+				{
+					product.lPrev = product.l;
+					gui.destroy();
+					guiCreate();
+				}
+				//product.segmentQuantity = params.quantity;
+				//if (product.segmentQuantity != product.segmentQuantityPrev)
+					//params.quantity = 0;
+*/
 				if (segmentOptions[params.options] == 3)
-					product.segmentQuantity = params.quantity;
-				if (product.segmentQuantity != product.segmentQuantityPrev)
+				{
+				if (product.lPrev != product.l)
+				{
+					if (product.lPrev != -1 || product.hPrev != -1) //first init
+						gui.remove(mQuantity);
+					product.lPrev = product.l;
+					params.quantity = 0;
+					// make it for l and h
+					mQuantity = gui.add( params, 'quantity', 0, params.l / 0.2 ).step(1).name('▪ Sections');
+				}
+				}
+				else
+				{
+				if (product.hPrev != product.h)
+				{
+					if (product.hPrev != -1 || product.lPrev != -1) //first init
+						gui.remove(mQuantity);
+					product.hPrev = product.h;
+					params.quantity = 0;
+					mQuantity = gui.add( params, 'quantity', 0, params.h / 0.2 ).step(1).name('▪ Quantity');
+				}
+				}
+			//	else
+			//	{
+			//		if (product.lPrev != -1) //first init
+			//			gui.remove(mQuantity);
+			//		product.lPrev = -1;
+			//	}
+				/*
+				if (product.hPrev != product.h && segmentOptions[params.options] != 3)
+				{
+					if (product.hPrev != -1) //first init
+						gui.remove(mQuantity);
+					product.hPrev = product.h;
+					params.quantity = 0;
+					mQuantity = gui.add( params, 'quantity', 0, params.h / 0.2 ).step(1).name('▪ Quantity');
+				}
+				else if (segmentOptions[params.options] != 3)
+				{
+					if (product.hPrev != -1) //first init
+						gui.remove(mQuantity);
+					product.hPrev = -1;
+				}
+				*/
+			//	if (segmentOptions[params.options] == 3)
+				product.segmentQuantity = params.quantity;
+				
+				if ((product.segmentQuantity != product.segmentQuantityPrev && segmentOptions[params.options] == 3)/* || product.lPrev != product.l*/)
 				{
 					segmentParams.options = 0;
 					segmentParams.quantity = 0;
-					for (var i = 0; i < product.segmentQuantityPrev; i++) // some problems
-					{
-						gui.remove(vOptions[i]);
-						gui.remove(vQuantity[i]);
-					}
+					if (product.segmentQuantityPrev != -1) //first init
+						guiRemoveSegm(0, product.segmentQuantityPrev)
 					product.segmentQuantityPrev = product.segmentQuantity;
-					for (var i = 0; i < params.quantity; i++)
-		 			{
-						vOptions[i] = gui.add(segmentParams, 'options', Object.keys(segmentOptions)).name('▪▪ Segment ' + (i + 1));
-						vQuantity[i] = gui.add(segmentParams, 'quantity', 0, 10).step(1).name('▪▪ Quantity ' + (i + 1));
-		  			}
+					guiAddSegm(0, params.quantity);
+				} 
+				else if (segmentOptions[params.options] != 3)
+				{
+					if (product.segmentQuantityPrev != -1) //first init
+						guiRemoveSegm(0, product.segmentQuantityPrev)
+					product.segmentQuantityPrev = -1;
 				}
 
 				renderer.render( scene, camera );
