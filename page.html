@@ -80,22 +80,28 @@
 				"50000 lx (Direct Sun)": 50000
 			};
 			var profileColorChoose = {
-				"Alum": 0,
-				"White": 1,
-				"Black": 2
+				"Алюміній": 0,
+				"Білий": 1,
+				"Чорний": 2
 			};
 			var woodColorChoose = {
-				"White": 0,
-				"Grey": 1,
-				"Black": 2,
-				"Oak1": 3,
-				"Oak2": 4
+				"Білий": 0,
+				"Сірий": 1,
+				"Чориний": 2,
+				"Дуб 1": 3,
+				"Дуб 2": 4
 			};
 			var segmentOptions = {
-				"Shelfs": 0,
-				"Door with inner shelfs": 1,
-				"Drawers": 2,
-				"Divide": 3
+				"Немає": 0,
+				"Полички": 1,
+				"Секції": 2
+			}
+			var upperSegmentOptions = 
+			{
+				"Полички": 0,
+				"Дверка з внутр. поличками": 1,
+				"Шухляди [не працює]": 2,
+				"Секції [не працює]": 3
 			}
 			var params = {
 				shadows: true,
@@ -114,14 +120,16 @@
 				profileLen: 0.1,
 				test: 0
 			};
-			var segmentParams = {
-				index: 0,
-				options: Object.keys(segmentOptions)[0],
-				quantity: 0
+
+			var segmentParams = [];
+			for (var g = 0; g != 22; g++)
+			{
+				segmentParams[g] = {
+					index: 0,
+					options: Object.keys(upperSegmentOptions)[0],
+					quantity: 0
+				};
 			};
-			var testtest = [];
-			for(var g = 0; g != 20; g++)
-				testtest[g] = segmentParams;
 
 			var clock = new THREE.Clock();
 		
@@ -169,34 +177,7 @@
 					metalness: 0.2,
 					bumpScale: 0.0005
 				});
-				/*
-				var textureLoader = new THREE.TextureLoader();
-				textureLoader.load( "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_diffuse.jpg", function( map ) {
-					map.wrapS = THREE.RepeatWrapping;
-					map.wrapT = THREE.RepeatWrapping;
-					map.anisotropy = 4;
-					map.repeat.set( 10 * scale, 24 * scale);
-					floorMat.map = map;
-					floorMat.needsUpdate = true;
-				} );
-				
-				textureLoader.load( "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_bump.jpg", function( map ) {
-					map.wrapS = THREE.RepeatWrapping;
-					map.wrapT = THREE.RepeatWrapping;
-					map.anisotropy = 4;
-					map.repeat.set( 10 * scale, 24 * scale);
-					floorMat.bumpMap = map;
-					floorMat.needsUpdate = true;
-				} );
-				textureLoader.load( "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/hardwood2_roughness.jpg", function( map ) {
-					map.wrapS = THREE.RepeatWrapping;
-					map.wrapT = THREE.RepeatWrapping;
-					map.anisotropy = 4;
-					map.repeat.set( 10 * scale, 24 * scale);
-					floorMat.roughnessMap = map;
-					floorMat.needsUpdate = true;
-				} );
-*/
+
 				var floorGeometry = new THREE.PlaneBufferGeometry( 20 * scale, 20 * scale);
 				var floorMesh = new THREE.Mesh( floorGeometry, floorMat );
 				floorMesh.receiveShadow = true;
@@ -208,6 +189,10 @@
 			//	product.l = 0.6;
 		//		product.profileColor = 0;
 				product.profile = [];
+				product.shelfs = [];
+				product.platesB = [];
+				product.platesH = [];
+				product.platesV = [];
 		//		product.wood = [][];
 				product.lPrev = -1;
 				product.hPrev = -1;
@@ -219,6 +204,7 @@
 				product.profileThick = 0.03 * scale;
 				product.topThick = 0.025 * scale;
 				product.botThick = 0.025 * scale;
+				product.plateThick = 0.018 * scale;
 				product.profileMat = [];
 				addProfileMaterial(0, product, 0xe5e5e5, 0.8);
 				addProfileMaterial(1, product, 0xffffff, 0.5);
@@ -294,7 +280,10 @@
 			//	//	product.segmentQuantityPrev = product.segmentQuantity;
 					gui.destroy();
 					guiCreate();
+					params.quantity = 0;
 				}
+				*/
+				/*
 				if (product.lPrev != product.l)
 				{
 					product.lPrev = product.l;
@@ -305,29 +294,54 @@
 				//if (product.segmentQuantity != product.segmentQuantityPrev)
 					//params.quantity = 0;
 */
-				if (segmentOptions[params.options] == 3)
+				
+				//if (segmentOptions[params.options] == 0)
+				//{
+				//	if (product.lPrev != -1 || product.hPrev != -1)
+			//			gui.remove(mQuantity);
+		//			params.quantity = 0;
+	//				//product.lPrev = product.l;
+//					//product.hPrev = product.h;
+//				}
+			//	product.segmentQuantity = params.quantity;
+				if (segmentOptions[params.options] == 2)
 				{
-				if (product.lPrev != product.l)
-				{
-					if (product.lPrev != -1 || product.hPrev != -1) //first init
-						gui.remove(mQuantity);
-					product.lPrev = product.l;
-					params.quantity = 0;
-					// make it for l and h
-					mQuantity = gui.add( params, 'quantity', 0, params.l / 0.2 ).step(1).name('▪ Sections');
+					if (product.lPrev != product.l || product.mainSegmentStatus != segmentOptions[params.options])
+					{
+						if (product.lPrev != -1 || product.hPrev != -1) //first init
+							gui.remove(mQuantity);
+						product.lPrev = product.l;
+						product.mainSegmentStatus = segmentOptions[params.options];
+						params.quantity = Math.ceil(params.l / 0.8);
+						// make it for l and h
+						mQuantity = gui.add( params, 'quantity', Math.ceil(params.l / 0.8), params.l / 0.2 ).step(1).name('▪ Секції');
+					}
 				}
+				else if (segmentOptions[params.options] == 1)
+				{
+					if (product.hPrev != product.h || product.mainSegmentStatus != segmentOptions[params.options])
+					{
+						if (product.hPrev != -1 || product.lPrev != -1) //first init
+							gui.remove(mQuantity);
+						product.hPrev = product.h;
+						product.mainSegmentStatus = segmentOptions[params.options];
+						params.quantity = Math.floor(params.h / 0.3);
+						mQuantity = gui.add( params, 'quantity', 1, Math.floor(params.h / 0.2) ).step(1).name('▪ Кількість');
+					}
 				}
 				else
 				{
-				if (product.hPrev != product.h)
-				{
-					if (product.hPrev != -1 || product.lPrev != -1) //first init
-						gui.remove(mQuantity);
-					product.hPrev = product.h;
-					params.quantity = 0;
-					mQuantity = gui.add( params, 'quantity', 0, params.h / 0.2 ).step(1).name('▪ Quantity');
+
+					if (product.mainSegmentStatus != segmentOptions[params.options])
+					{
+						if (product.hPrev != -1 || product.lPrev != -1)
+							gui.remove(mQuantity);
+						product.hPrev = -1;
+						product.lPrev = -1;
+						product.mainSegmentStatus = segmentOptions[params.options];
+					}
 				}
-				}
+				
 			//	else
 			//	{
 			//		if (product.lPrev != -1) //first init
@@ -353,7 +367,9 @@
 			//	if (segmentOptions[params.options] == 3)
 				product.segmentQuantity = params.quantity;
 				
-				if ((product.segmentQuantity != product.segmentQuantityPrev && segmentOptions[params.options] == 3)/* || product.lPrev != product.l*/)
+				if ((product.segmentQuantity != product.segmentQuantityPrev && segmentOptions[params.options] == 2)
+					
+					/* || product.lPrev != product.l*/)
 				{
 					segmentParams.options = 0;
 					segmentParams.quantity = 0;
@@ -362,13 +378,13 @@
 					product.segmentQuantityPrev = product.segmentQuantity;
 					guiAddSegm(0, params.quantity);
 				} 
-				else if (segmentOptions[params.options] != 3)
+				else if (segmentOptions[params.options] != 2)
 				{
 					if (product.segmentQuantityPrev != -1) //first init
 						guiRemoveSegm(0, product.segmentQuantityPrev)
 					product.segmentQuantityPrev = -1;
 				}
-
+				
 				renderer.render( scene, camera );
 				stats.update();
 			}

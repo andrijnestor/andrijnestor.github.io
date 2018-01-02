@@ -32,6 +32,78 @@ function addProduct(product, scene)
 	scene.add(product.topW);
 
 
+	if (segmentOptions[params.options] == 1)
+	{
+		var inputH = params.h - product.topThick - product.profileThick - 0.03;
+		product.shelfG = new THREE.BoxGeometry(product.l - 0.01, product.topThick, product.w - 0.01 - 0.06);
+		for (var i = 0; i != params.quantity; i++)
+		{
+
+			product.shelfs[i] = new THREE.Mesh(product.shelfG, product.woodMat[product.woodColor]);
+			product.shelfs[i].position.set(0, 0.03 + (inputH / (params.quantity + 1) * (i + 1)) , 0);
+			product.shelfs[i].castShadow = true;
+			scene.add(product.shelfs[i]);
+		}
+	}
+	else if (segmentOptions[params.options] == 2)
+	{
+
+		var segmentL = product.l - product.profileThick * 2 - offset * 2;
+		var segmentH = product.h - product.topThick - product.profileThick - 0.15;
+		var segmentW = product.w - offset * 2;
+		
+		product.plateTopBotG = new THREE.BoxGeometry(segmentL, product.plateThick, segmentW - product.plateThick * 2);
+		product.plateBotW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
+		product.plateBotW.position.set(0, product.plateThick / 2 + 0.15, 0);
+		product.plateBotW.castShadow = true;
+		scene.add(product.plateBotW);
+		product.plateTopW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
+		product.plateTopW.position.set(0, -product.plateThick / 2 + segmentH + 0.15, 0);
+		product.plateTopW.castShadow = true;
+		scene.add(product.plateTopW);
+
+		var plateBackL = segmentL / params.quantity;
+		product.plateBackG = new THREE.BoxGeometry(plateBackL, segmentH, product.plateThick);
+		for (var i = 0; i != params.quantity; i++)
+		{
+			product.platesB[i] = new THREE.Mesh(product.plateBackG, product.woodMat[product.woodColor]);
+			product.platesB[i].position.set((-plateBackL / 2 * params.quantity) + plateBackL / 2 + plateBackL * (i + 0),
+				segmentH / 2 + 0.15,  -segmentW / 2 + product.plateThick / 2);
+			product.platesB[i].castShadow = true;
+			scene.add(product.platesB[i]);
+		}
+
+		var vPlatesQuantity = params.quantity + 1;
+		product.plateVerticalG = new THREE.BoxGeometry(product.plateThick, segmentH - product.plateThick * 2, segmentW - product.plateThick * 2); 
+		for (var i = 0; i != vPlatesQuantity; i++)
+		{
+			product.platesV[i] = new THREE.Mesh(product.plateVerticalG, product.woodMat[product.woodColor]);
+			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i), (segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, 0);
+			product.platesV[i].castShadow = true;
+			scene.add(product.platesV[i]);
+		}
+	//	product.woodMat[product.woodColor].transparent = true;
+	//	product.woodMat[product.woodColor].opacity = 0.5;
+		var hPlatesL = (segmentL - product.plateThick * vPlatesQuantity) / params.quantity;
+		product.plateHorisontalG = new THREE.BoxGeometry(hPlatesL, product.plateThick, segmentW - product.plateThick * 2 - 0.02);
+		var k = 0;
+		for (var i = 0; i != params.quantity; i++)
+		{
+			for (var j = 0; j != segmentParams[i].quantity; j++)
+			{
+				product.platesH[k] = new THREE.Mesh(product.plateHorisontalG, product.woodMat[product.woodColor]);
+				product.platesH[k].position.set((-segmentL / 2 + hPlatesL / 2 + product.plateThick) + (hPlatesL + product.plateThick) * i, 
+					0.15 + (segmentH / (segmentParams[i].quantity + 1) * (j + 1)), -product.plateThick / 2);
+				product.platesH[k].castShadow = true;
+				scene.add(product.platesH[k]);
+				k++;
+			}
+		}
+		
+		
+
+	}
+
 	product.topSquare = product.l * product.w;
 //	product.segmentQuantity = params.vDivide;
 	product.profileLen = hProfil * 4 + wProfil * 4 + lProfil * 2;
@@ -123,6 +195,23 @@ function delProduct(product, scene)
 	while (product.profile[n])
 		scene.remove(product.profile[n++]);
 	scene.remove(product.topW);
+	n = 0;
+	while (product.shelfs[n])
+		scene.remove(product.shelfs[n++]);
+	n = 0;
+	while (product.platesB[n])
+		scene.remove(product.platesB[n++]);
+	n = 0;
+	while (product.platesV[n])
+		scene.remove(product.platesV[n++]);
+	n = 0;
+	while (product.platesH[n])
+		scene.remove(product.platesH[n++]);
+	if (product.plateTopW)
+		scene.remove(product.plateTopW);
+	if (product.plateBotW)
+		scene.remove(product.plateBotW);
+	
 }
 
 function guiRemoveSegm(from, to)
@@ -138,8 +227,14 @@ function guiAddSegm(from, to)
 {
 	for (var i = from; i < to; i++)
 	{
-		vOptions[i] = gui.add(segmentParams, 'options', Object.keys(segmentOptions)).name('▪▪ Section ' + (i + 1));
-		vQuantity[i] = gui.add(segmentParams, 'quantity', 0, 10).step(1).name('▪▪ Quantity ' + (i + 1));
+		segmentParams[i].quantity = Math.floor((params.h - 0.21) / 0.3);
+		vOptions[i] = gui.add(segmentParams[i], 'options', Object.keys(upperSegmentOptions)).name('▪▪ Секція ' + (i + 1));
+		vQuantity[i] = gui.add(segmentParams[i], 'quantity', 0, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ Кількість ' + (i + 1));
+	//	if (upperSegmentOptions.quantity > 1) 
+	//	{
+	//		guiAddSegm(0, 1);
+	//		upperSegmentOprions.quantity = 0;
+	//	}
 	}
 }
 
@@ -151,12 +246,12 @@ function guiCreate()
 	gui.add( params, 'bulbPower', Object.keys( bulbLuminousPowers ) );
 	gui.add( params, 'exposure', 0, 1 );
 	gui.add( params, 'shadows' );
-	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Profile color');
-	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Wood color');
-	gui.add( params, 'h', 0.2, 2 ).name('▪ Height (m)').step(0.01);
-	gui.add( params, 'w', 0.2, 1 ).name('▪ Width (m)').step(0.01);
-	gui.add( params, 'l', 0.2, 2 ).name('▪ Length (m)').step(0.01);
-	gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Options');
+	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Колір профіля');
+	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Текстура плити');
+	gui.add( params, 'h', 0.2, 2.4 ).name('▪ Висота (m)').step(0.01);
+	gui.add( params, 'w', 0.3, 0.8 ).name('▪ Ширина (m)').step(0.01);
+	gui.add( params, 'l', 0.2, 2.4 ).name('▪ Довжина (m)').step(0.01);
+	gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Опції');
 
 	//gui.add( params, 'quantity').step(1).name('▪ Quantity').min(0).max(params.l / 0.2).listen().updateDisplay(); //handle max
 //	for (var i = 0; i < params.vDivide; i++)
@@ -172,10 +267,10 @@ function guiCreate()
 //	if (product.segmentQuantity > 0)
 //		gui.add( params, 'test' );
 //	}
-	//var ggg = gui.add(params, 'test');
+//	var ggg = gui.add(params, 'test');
+
 //	gui.add(params, 'test');
 //	gui.hide(ggg);
-
 //	ggg.domElement.setAttribute("hidden", true);
 	gui.open();
 }
