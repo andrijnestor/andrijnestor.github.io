@@ -62,13 +62,13 @@ function addProduct(product, scene)
 		var segmentH = product.h - product.topThick - product.profileThick - 0.15;
 		var segmentW = product.w - offset * 2;
 		
-		product.plateTopBotG = new THREE.BoxGeometry(segmentL, product.plateThick, segmentW - product.plateThick * 2);
+		product.plateTopBotG = new THREE.BoxGeometry(segmentL, product.plateThick, segmentW - product.plateThick);
 		product.plateBotW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
-		product.plateBotW.position.set(0, product.plateThick / 2 + 0.15, 0);
+		product.plateBotW.position.set(0, product.plateThick / 2 + 0.15, product.plateThick / 2);
 		product.plateBotW.castShadow = true;
 		scene.add(product.plateBotW);
 		product.plateTopW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
-		product.plateTopW.position.set(0, -product.plateThick / 2 + segmentH + 0.15, 0);
+		product.plateTopW.position.set(0, -product.plateThick / 2 + segmentH + 0.15, product.plateThick / 2);
 		product.plateTopW.castShadow = true;
 		scene.add(product.plateTopW);
 
@@ -90,11 +90,11 @@ function addProduct(product, scene)
 		}
 
 		var vPlatesQuantity = params.quantity + 1;
-		product.plateVerticalG = new THREE.BoxGeometry(product.plateThick, segmentH - product.plateThick * 2, segmentW - product.plateThick * 2); 
+		product.plateVerticalG = new THREE.BoxGeometry(product.plateThick, segmentH - product.plateThick * 2, segmentW - product.plateThick); 
 		for (var i = 0; i != vPlatesQuantity; i++)
 		{
 			product.platesV[i] = new THREE.Mesh(product.plateVerticalG, product.woodMat[product.woodColor]);
-			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i), (segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, 0);
+			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i), (segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, product.plateThick / 2);
 			product.platesV[i].castShadow = true;
 			scene.add(product.platesV[i]);
 
@@ -128,10 +128,10 @@ function addProduct(product, scene)
 			}
 			if (upperSegmentOptions[segmentParams[i].options] == 1)
 			{
-				var doorL = hPlatesL + product.plateThick;
-				product.doorG = new THREE.BoxGeometry(doorL, segmentH - product.plateThick, product.plateThick);
+				var doorL = hPlatesL - 0.003;
+				product.doorG = new THREE.BoxGeometry(doorL, segmentH - product.plateThick * 2 - 0.003, product.plateThick);
 				product.doors[l] = new THREE.Mesh(product.doorG, doorMat);
-				product.doors[l].position.set((-segmentL / 2 + doorL / 2) + (doorL + product.plateThick) * i,
+				product.doors[l].position.set((-segmentL / 2 + doorL / 2 + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i,
 					segmentH / 2 + 0.15, segmentW / 2 - product.plateThick / 2);
 				product.doors[l].castShadow = true;
 				scene.add(product.doors[l]);
@@ -232,6 +232,7 @@ function addProfile(n, l, h, w, product, scene)
 function delProduct(product, scene)
 {
 	var n = 0;
+
 	while (product.profile[n])
 		scene.remove(product.profile[n++]);
 	scene.remove(product.topW);
@@ -267,37 +268,111 @@ function guiRemoveSegm(from, to)
 	}
 }
 
-function guiAddSegm(from, to)
+function guiAddhSegm(from, to, i)  // handle i
 {
-	for (var i = from; i < to; i++)
+	for (var j = from; j < to; j++)
 	{
-		segmentParams[i].quantity = Math.floor((params.h - 0.21) / 0.3);
-		vOptions[i] = gui.add(segmentParams[i], 'options', Object.keys(upperSegmentOptions)).name('▪▪ Секція ' + (i + 1));
-		vQuantity[i] = gui.add(segmentParams[i], 'quantity', 0, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ Кількість ' + (i + 1));
-	//	if (upperSegmentOptions.quantity > 1) 
-	//	{
-	//		guiAddSegm(0, 1);
-	//		upperSegmentOprions.quantity = 0;
-	//	}
+		gui.hOptions[j] = gui.add(segmentParams[j], 'options', Object.keys(upperSegmentOptions)).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Секція');
+		gui.hQuantity[j] = gui.add(segmentParams[j], 'quantity', 2, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Кількість');
+	}
+}
+
+function guiAddvSegm(from, to)
+{
+	for (var j = from; j < to; j++)
+	{
+		//segmentParams[j].quantity = Math.floor((params.h - 0.21) / 0.3);
+		gui.vOptions[j] = gui.add(segmentParams[j], 'options', Object.keys(upperSegmentOptions)).name('▪▪ ' + (j + 1) +  ' Секція');
+		gui.vQuantity[j] = gui.add(segmentParams[j], 'quantity', 0, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ ' + (j + 1) + ' Кількість');
+		if (upperSegmentOptions[segmentParams[j].options] == 3)
+			guiAddhSegm(0, segmentParams[j].quantity, j);
+	}
+}
+
+function renderGui()
+{
+	var i = 0;
+
+	while (gui.rebuild[i])
+	{
+		gui.rebuild[i].onFinishChange(function() {
+			gui.destroy();
+			guiCreate();
+		});
+		i++;
+	}
+	i = 0;
+	while (gui.vQuantity[i])
+	{
+		gui.vQuantity[i].onFinishChange(function() {
+			gui.destroy();
+			guiCreate();
+		});
+		i++;
+	}
+	i = 0;
+	while (gui.vOptions[i])
+	{
+		gui.vOptions[i].onFinishChange(function() {
+			gui.destroy();
+			guiCreate();
+		});
+		i++;
 	}
 }
 
 function guiCreate()
 {
-	params.quantity = 0; // ned to be set to needed value (or dont)
+	var i = 0;
+
+	//fizzyText = new FizzyText();
 	gui = new dat.GUI();
-	gui.add( params, 'hemiIrradiance', Object.keys( hemiLuminousIrradiances ) );
-	gui.add( params, 'bulbPower', Object.keys( bulbLuminousPowers ) );
-	gui.add( params, 'exposure', 0, 1 );
-	gui.add( params, 'shadows' );
+	//gui.remember(fizzyText);
+//	var gui = new dat.GUI({
+//		load: JSON,
+//		preset: 'Flow'
+//	});
+//	gui.remember(fizzyText);
+
+
+	gui.rebuild = [];
+	gui.vOptions = [];
+	gui.vQuantity = [];
+	gui.hOptions = [];
+	gui.hQuantity = [];
+	//params.quantity = 2; // ned to be set to needed value (or dont) // asdasdasdasdasd
+
+	//develop params
+//	gui.add( params, 'hemiIrradiance', Object.keys( hemiLuminousIrradiances ) );
+//	gui.add( params, 'bulbPower', Object.keys( bulbLuminousPowers ) );
+//	gui.add( params, 'exposure', 0, 1 );
+//	gui.add( params, 'shadows' );
+	//main params
 	gui.add( params, 'price').name('▪ Ціна (uah)').listen();
 	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Колір профіля');
 	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Текстура плити');
-	gui.add( params, 'h', 0.2, 2.4 ).name('▪ Висота (m)').step(0.01);
-	gui.add( params, 'w', 0.3, 0.8 ).name('▪ Ширина (m)').step(0.01);
-	gui.add( params, 'l', 0.2, 2.4 ).name('▪ Довжина (m)').step(0.01);
-	gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Опції');
+	//rebuild params (onChange rebuild GUI)
+	gui.rebuild[i++] = gui.add( params, 'h', 0.2, 2.4 ).name('▪ Висота (m)').step(0.01);
+	gui.rebuild[i++] = gui.add( params, 'w', 0.3, 0.8 ).name('▪ Глибина (m)').step(0.01);
+	gui.rebuild[i++] = gui.add( params, 'l', 0.2, 2.4 ).name('▪ Ширина (m)').step(0.01);
+	gui.rebuild[i++] = gui.add( params, 'options', Object.keys( segmentOptions) ).name('▪ Опції');
 
+	if (segmentOptions[params.options] == 2)
+	{
+		gui.rebuild[i++] = gui.add( params, 'quantity', Math.ceil(params.l / 0.8), params.l / 0.2 ).step(1).name('▪ Секції');
+		guiAddvSegm(0, params.quantity);
+	}
+	else if (segmentOptions[params.options] == 1)
+	{
+		params.quantity = Math.floor(params.h / 0.3); // auto shelfs
+		gui.add( params, 'quantity', 1, Math.floor(params.h / 0.2) ).step(1).name('▪ Кількість');
+	}
+	
+
+	//gui.remember(fizzyText);
+
+	//for (var key in gui)
+//		alert(gui[key]);
 
 	//gui.add( params, 'quantity').step(1).name('▪ Quantity').min(0).max(params.l / 0.2).listen().updateDisplay(); //handle max
 //	for (var i = 0; i < params.vDivide; i++)

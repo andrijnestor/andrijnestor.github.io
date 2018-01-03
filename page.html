@@ -1,9 +1,12 @@
+@import "newstyles.css";
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<title>three.js webgl - lights - physical lights</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	//	<link rel="stylesheet" type="text/css" href="dat-gui-light-theme.css" />
+	
 		<style>
 			body {
 				background-color: #000;
@@ -35,7 +38,7 @@
 
 		<script src="js/three.js"></script>
 		<script src="js/stats.min.js"></script>
-		<script src="js/dat.gui.js"></script>
+		<script src="js/dat.gui.min.js"></script>
 		<script src="js/OrbitControls.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/BufferSubdivisionModifier.js"></script>
@@ -44,9 +47,10 @@
 		<script>
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			
+			
+			var fizzyText;
 			var gui;
-			var vOptions = [];
-			var vQuantity = [];
+	
 			var mQuantity;
 			var scale = 1;
 			var camera, scene, renderer,
@@ -114,10 +118,10 @@
 				w: 0.6,
 				l: 1.1,
 				options: Object.keys(segmentOptions)[0],
-				quantity: 0,
+				quantity: 1,
 		//		vDivide: 0,
 			//	segment: 'segment',
-				profileLen: 0.1,
+				profileLen: 0,
 				price: 0
 			};
 
@@ -195,11 +199,11 @@
 				product.platesV = [];
 				product.doors = [];
 		//		product.wood = [][];
-				product.lPrev = -1;
-				product.hPrev = -1;
-				product.mainSegmentStatus = 0;
-				product.segmentQuantityPrev = -1;
-				product.segmentQuantity = 0;
+			//	product.lPrev = -1;
+			//	product.hPrev = -1;
+			//	product.mainSegmentStatus = 0;
+			//	product.segmentQuantityPrev = -1;
+			//	product.segmentQuantity = 0;
 				product.profileLen = 0;
 				product.topSquare = 0;
 				product.topEdgeLen = 0;
@@ -248,6 +252,7 @@
 			
 			function animate() {
 				requestAnimationFrame( animate );
+				renderGui();
 				render();
 			}
 			
@@ -308,6 +313,7 @@
 //					//product.hPrev = product.h;
 //				}
 			//	product.segmentQuantity = params.quantity;
+			/*
 				if (segmentOptions[params.options] == 2)
 				{
 					if (product.lPrev != product.l || product.mainSegmentStatus != segmentOptions[params.options])
@@ -345,7 +351,7 @@
 						product.mainSegmentStatus = segmentOptions[params.options];
 					}
 				}
-				
+				*/
 			//	else
 			//	{
 			//		if (product.lPrev != -1) //first init
@@ -369,11 +375,12 @@
 				}
 				*/
 			//	if (segmentOptions[params.options] == 3)
+			/*
 				product.segmentQuantity = params.quantity;
 				
 				if ((product.segmentQuantity != product.segmentQuantityPrev && segmentOptions[params.options] == 2)
 					
-					/* || product.lPrev != product.l*/)
+					/* || product.lPrev != product.l)
 				{
 					segmentParams.options = 0;
 					segmentParams.quantity = 0;
@@ -389,6 +396,13 @@
 					product.segmentQuantityPrev = -1;
 				}
 				
+*/
+				//gui.options.onFinishChange(function() {
+			//		gui.destroy();
+			//		guiCreate();
+			//	});
+				//guiRebuild();
+
 				params.price = priceCalc();
 				renderer.render( scene, camera );
 				stats.update();
