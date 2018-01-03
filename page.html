@@ -118,7 +118,7 @@
 		//		vDivide: 0,
 			//	segment: 'segment',
 				profileLen: 0.1,
-				test: 0
+				price: 0
 			};
 
 			var segmentParams = [];
@@ -193,6 +193,7 @@
 				product.platesB = [];
 				product.platesH = [];
 				product.platesV = [];
+				product.doors = [];
 		//		product.wood = [][];
 				product.lPrev = -1;
 				product.hPrev = -1;
@@ -201,6 +202,9 @@
 				product.segmentQuantity = 0;
 				product.profileLen = 0;
 				product.topSquare = 0;
+				product.topEdgeLen = 0;
+				product.plateSquare = 0;
+				product.plateEdgeLen = 0;
 				product.profileThick = 0.03 * scale;
 				product.topThick = 0.025 * scale;
 				product.botThick = 0.025 * scale;
@@ -385,6 +389,7 @@
 					product.segmentQuantityPrev = -1;
 				}
 				
+				params.price = priceCalc();
 				renderer.render( scene, camera );
 				stats.update();
 			}
