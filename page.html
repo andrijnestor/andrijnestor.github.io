@@ -100,109 +100,38 @@
 				"Полички": 1,
 				"Секції": 2
 			}
-			var secondSegmentOptions = 
+			var upperSegmentOptions = 
 			{
 				"Полички": 0,
 				"Дверка з внутр. поличками": 1,
 				"Шухляди [не працює]": 2,
 				"Секції [не працює]": 3
 			}
-			var thirdSegmentOptions = 
-			{
-				"Полички": 0,
-				"Дверка з внутр. поличками": 1,
-				"Шухляди [не працює]": 2,
-				"Секції [не працює]": 3
-			}
-			
 			var params = {
 				shadows: true,
 				exposure: 0.68, //0.68
-				bulbPower: Object.keys(bulbLuminousPowers)[5],
-				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[2],
+				bulbPower: Object.keys(bulbLuminousPowers)[2],
+				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[4],
 				profileColor: Object.keys(profileColorChoose)[0],
 				woodColor: Object.keys(woodColorChoose)[4],
-				h: 1.4,
+				h: 0.75,
 				w: 0.6,
-				l: 0.8,
-				options: Object.keys(segmentOptions)[2],
+				l: 1.1,
+				options: Object.keys(segmentOptions)[0],
 				quantity: 1,
 		//		vDivide: 0,
 			//	segment: 'segment',
 				profileLen: 0,
 				price: 0
 			};
-/*
-			var segmentParams22 = [];
-			for (var g = 0; g != 20; g++)
-			{
-				segmentParams22[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-*/
-			//	var segmentParams22 = {
-			//		options: Object.keys(secondSegmentOptions)[0],
-			//		quantity: 0
-			//	};
-			/*
-			var segmentParams222 = [];
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams222[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-*/
-			/*
-			var opt = [];
-			for (var q = 0; q != 20; q++)
-				opt[q] = Object.keys(secondSegmentOptions)[0];
-			var quant = [];
-			for (q = 0; q != 20; q++)
-				quant[q] = 0;
-			*/
-			var segmentParams2;
-			/*
-			segmentParams2 = [];
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams2[p] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-			*/
-						/*
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams22[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-			*/
+
 			var segmentParams = [];
 			for (var g = 0; g != 22; g++)
-			{	
-				//ja ibav	
-				segmentParams2 = [];
-				for (var p = 0; p != 22; p++)
-				{
-					segmentParams2[p] = {
-						options: Object.keys(secondSegmentOptions)[1],
-						quantity: 1
-					};
-				};
+			{
 				segmentParams[g] = {
-					options: Object.keys(secondSegmentOptions)[3],
-					quantity: 2,
-					segmentParams2: segmentParams2.slice()
-
-					//segmentParams2.options.push(opt);
-					//segmentParams2.quantity.push(quant);
+					index: 0,
+					options: Object.keys(upperSegmentOptions)[0],
+					quantity: 0
 				};
 			};
 

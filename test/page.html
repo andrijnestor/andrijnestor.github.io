@@ -105,8 +105,9 @@
 				"Полички": 0,
 				"Дверка з внутр. поличками": 1,
 				"Шухляди [не працює]": 2,
-				"Секції [не працює]": 3
+			//	"Секції [не працює]": 3
 			}
+			/*
 			var thirdSegmentOptions = 
 			{
 				"Полички": 0,
@@ -114,7 +115,7 @@
 				"Шухляди [не працює]": 2,
 				"Секції [не працює]": 3
 			}
-			
+			*/
 			var params = {
 				shadows: true,
 				exposure: 0.68, //0.68
@@ -132,58 +133,8 @@
 				profileLen: 0,
 				price: 0
 			};
-/*
-			var segmentParams22 = [];
-			for (var g = 0; g != 20; g++)
-			{
-				segmentParams22[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-*/
-			//	var segmentParams22 = {
-			//		options: Object.keys(secondSegmentOptions)[0],
-			//		quantity: 0
-			//	};
-			/*
-			var segmentParams222 = [];
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams222[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-*/
-			/*
-			var opt = [];
-			for (var q = 0; q != 20; q++)
-				opt[q] = Object.keys(secondSegmentOptions)[0];
-			var quant = [];
-			for (q = 0; q != 20; q++)
-				quant[q] = 0;
-			*/
+
 			var segmentParams2;
-			/*
-			segmentParams2 = [];
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams2[p] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-			*/
-						/*
-			for (var p = 0; p != 22; p++)
-			{
-				segmentParams22[g] = {
-					options: Object.keys(secondSegmentOptions)[0],
-					quantity: 0
-				};
-			};
-			*/
 			var segmentParams = [];
 			for (var g = 0; g != 22; g++)
 			{	
@@ -192,13 +143,13 @@
 				for (var p = 0; p != 22; p++)
 				{
 					segmentParams2[p] = {
-						options: Object.keys(secondSegmentOptions)[1],
-						quantity: 1
+						options: Object.keys(secondSegmentOptions)[0],
+						quantity: 0
 					};
 				};
 				segmentParams[g] = {
-					options: Object.keys(secondSegmentOptions)[3],
-					quantity: 2,
+					//options: Object.keys(secondSegmentOptions)[3],
+					quantity: 1,
 					segmentParams2: segmentParams2.slice()
 
 					//segmentParams2.options.push(opt);
@@ -269,6 +220,7 @@
 				product.platesH = [];
 				product.platesV = [];
 				product.doors = [];
+				product.handles = [];
 		//		product.wood = [][];
 			//	product.lPrev = -1;
 			//	product.hPrev = -1;
@@ -312,6 +264,13 @@
 				var controls = new THREE.OrbitControls( camera, renderer.domElement );
 				window.addEventListener( 'resize', onWindowResize, false );
 				guiCreate();
+
+				product.h = params.h * scale;
+				product.l = params.l * scale;
+				product.w = params.w * scale;
+				product.profileColor = profileColorChoose[params.profileColor];
+				product.woodColor = woodColorChoose[params.woodColor];
+				addProduct(product, scene);
 			}
 
 			function onWindowResize() {
@@ -323,8 +282,11 @@
 			
 			function animate() {
 				requestAnimationFrame( animate );
-				renderGui();
+				//renderGui();
+				//renderProduct();
 				render();
+				renderProduct();
+				//renderGui();
 			}
 			
 			var previousShadowMap = false;
@@ -341,14 +303,16 @@
 				hemiLight.intensity = hemiLuminousIrradiances[ params.hemiIrradiance ] * scale;
 				var time = Date.now() * 0.0005;
 				var delta = clock.getDelta();
+/*
 				product.h = params.h * scale;
 				product.l = params.l * scale;
 				product.w = params.w * scale;
 				product.profileColor = profileColorChoose[params.profileColor];
 				product.woodColor = woodColorChoose[params.woodColor];
-				delProduct(product, scene);
-				addProduct(product, scene);
-				params.profileLen = product.profileLen;
+*/
+			//	delProduct(product, scene);
+			//	addProduct(product, scene);
+				params.profileLen = product.profileLen; //??
 		//		bulbLight.position.y = Math.cos( time ) * 0.75 + 1.25;
 		//		scene.remove( bulbLight );
 		//		scene.add( bulbLight );

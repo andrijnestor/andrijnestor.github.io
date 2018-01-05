@@ -94,7 +94,8 @@ function addProduct(product, scene)
 		for (var i = 0; i != vPlatesQuantity; i++)
 		{
 			product.platesV[i] = new THREE.Mesh(product.plateVerticalG, product.woodMat[product.woodColor]);
-			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i), (segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, product.plateThick / 2);
+			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i),
+								(segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, product.plateThick / 2);
 			product.platesV[i].castShadow = true;
 			scene.add(product.platesV[i]);
 
@@ -111,8 +112,8 @@ function addProduct(product, scene)
 		var doorMat = {};
 		for (var key in product.woodMat[product.woodColor])
 			doorMat[key] = product.woodMat[product.woodColor][key];
-		//doorMat.transparent = true;
-		//doorMat.opacity = 0.9;
+		doorMat.transparent = true;
+		doorMat.opacity = 0.8;
 		var doorL, doorH, div3;
 		for (var i = 0; i != params.quantity; i++)
 		{
@@ -157,6 +158,20 @@ function addProduct(product, scene)
 						div3, segmentW / 2 - product.plateThick / 2);
 					product.doors[l].castShadow = true;
 					scene.add(product.doors[l]);
+
+					var handleSize;
+					if (i == 0)
+						handleSize = doorL - 0.05;
+					else
+						handleSize = 0.05;
+					product.handleG = new THREE.BoxGeometry(0.04, 0.04, 0.01);
+					product.handles[l] = new THREE.Mesh(product.handleG, product.profileMat[product.profileColor]);
+					product.handles[l].position.set((-segmentL / 2 + handleSize + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i,
+						div3, segmentW / 2);
+					product.handles[l].castWhadow = true;
+					scene.add(product.handles[l]);
+
+
 					l++;
 
 					product.plateSquare += doorL * (segmentH - product.plateThick);
@@ -164,7 +179,6 @@ function addProduct(product, scene)
 				}
 			}
 		}
-
 	}
 
 
@@ -275,6 +289,9 @@ function delProduct(product, scene)
 	n = 0;
 	while (product.doors[n])
 		scene.remove(product.doors[n++]);
+	n = 0;
+	while (product.handles[n])
+		scene.remove(product.handles[n++]);
 	if (product.plateTopW)
 		scene.remove(product.plateTopW);
 	if (product.plateBotW)
@@ -296,8 +313,14 @@ function guiAddhSegm(from, to, i)  // handle i
 {
 	for (var j = from; j < to; j++)
 	{
-		gui.hOptions[j] = gui.add(segmentParams[i].segmentParams2[j], 'options', Object.keys(secondSegmentOptions)).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Секція');
-		gui.hQuantity[j] = gui.add(segmentParams[i].segmentParams2[j], 'quantity', 0, Math.floor((params.h - 0.21) / segmentParams[i].quantity / 0.2)).step(1).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Кількість');
+		//gui.hOptions[j] = gui.add(segmentParams[i].segmentParams2[j], 'options', Object.keys(secondSegmentOptions)).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Секція');
+		//gui.hQuantity[j] = gui.add(segmentParams[i].segmentParams2[j], 'quantity', 0, Math.floor((params.h - 0.21) /
+		//						segmentParams[i].quantity / 0.2)).step(1).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Кількість');
+
+		gui.sectHo[i][j] = gui.add(segmentParams[i].segmentParams2[j], 'options', Object.keys(secondSegmentOptions)).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Секція');
+		gui.sectHn[i][j] = gui.add(segmentParams[i].segmentParams2[j], 'quantity', 0, Math.floor((params.h - 0.21) /
+								segmentParams[i].quantity / 0.2)).step(1).name('▪▪▪ ' + (i + 1) + '.' + (j + 1) + ' Кількість');
+
 	}
 }
 
@@ -306,10 +329,67 @@ function guiAddvSegm(from, to)
 	for (var j = from; j < to; j++)
 	{
 		//segmentParams[j].quantity = Math.floor((params.h - 0.21) / 0.3);
-		gui.vOptions[j] = gui.add(segmentParams[j], 'options', Object.keys(secondSegmentOptions)).name('▪▪ ' + (j + 1) +  ' Секція');
-		gui.vQuantity[j] = gui.add(segmentParams[j], 'quantity', 0, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ ' + (j + 1) + ' Кількість');
-		if (secondSegmentOptions[segmentParams[j].options] == 3)
-			guiAddhSegm(0, segmentParams[j].quantity, j);
+		//gui.vOptions[j] = gui.add(segmentParams[j], 'options', Object.keys(secondSegmentOptions)).name('▪▪ ' + (j + 1) +  ' Секція');
+		gui.sectV[j] = gui.add(segmentParams[j], 'quantity', 1, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ ' + (j + 1) + ' Секція');
+		//gui.sectV[j] = gui.add(segmentParams[j], 'quantity', 1, Math.floor((params.h - 0.21) / 0.2)).step(1).name('▪▪ ' + (j + 1) + ' Секція');
+		//if (secondSegmentOptions[segmentParams[j].options] == 3)
+		gui.sectHn[j] = [];
+		gui.sectHo[j] = [];
+		guiAddhSegm(0, segmentParams[j].quantity, j);
+	}
+}
+
+
+function renderProduct()
+{
+	var i, j;
+
+	//rewrite
+	product.h = params.h * scale;
+	product.l = params.l * scale;
+	product.w = params.w * scale;
+	product.profileColor = profileColorChoose[params.profileColor];
+	product.woodColor = woodColorChoose[params.woodColor];
+
+	i = 0;
+	while (gui.rebuild[i])
+	{
+		gui.rebuild[i].onFinishChange(function() {
+			gui.destroy();
+			guiCreate();
+			delProduct(product, scene);
+			addProduct(product, scene);
+		});
+		i++;
+	}
+	
+	i = 0;
+	while (gui.sectV[i])
+	{
+		gui.sectV[i].onFinishChange(function() {
+			gui.destroy();
+			guiCreate();
+			delProduct(product, scene);
+			addProduct(product, scene);
+		});
+		j = 0;
+		while (gui.sectHn[i][j]) //or gui.sectHn
+		{
+			gui.sectHn[i][j].onFinishChange(function() {
+				gui.destroy();
+				guiCreate();
+				delProduct(product, scene);
+				addProduct(product, scene);
+			});
+			gui.sectHo[i][j].onFinishChange(function() {
+				gui.destroy();
+				guiCreate();
+				delProduct(product, scene);
+				addProduct(product, scene);
+			});
+			j++;
+		}
+		i++;
 	}
 }
 
@@ -348,22 +428,12 @@ function renderGui()
 function guiCreate()
 {
 	var i = 0;
-
-	//fizzyText = new FizzyText();
 	gui = new dat.GUI();
-	//gui.remember(fizzyText);
-//	var gui = new dat.GUI({
-//		load: JSON,
-//		preset: 'Flow'
-//	});
-//	gui.remember(fizzyText);
-
-
 	gui.rebuild = [];
-	gui.vOptions = [];
-	gui.vQuantity = [];
-	gui.hOptions = [];
-	gui.hQuantity = [];
+	gui.sectV = [];
+	gui.sectHn = [];
+	gui.sectHo = [];
+
 	//params.quantity = 2; // ned to be set to needed value (or dont) // asdasdasdasdasd
 
 	//develop params
@@ -373,8 +443,8 @@ function guiCreate()
 	gui.add( params, 'shadows' );
 	//main params
 	gui.add( params, 'price').name('▪ Ціна (uah)').listen();
-	gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Колір профіля');
-	gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Текстура плити');
+	gui.rebuild[i++] = gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Колір профіля');
+	gui.rebuild[i++] = gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Текстура плити');
 	//rebuild params (onChange rebuild GUI)
 	gui.rebuild[i++] = gui.add( params, 'h', 0.2, 2.4 ).name('▪ Висота (m)').step(0.01);
 	gui.rebuild[i++] = gui.add( params, 'w', 0.3, 0.8 ).name('▪ Глибина (m)').step(0.01);
@@ -388,35 +458,10 @@ function guiCreate()
 	}
 	else if (segmentOptions[params.options] == 1)
 	{
-		params.quantity = Math.floor(params.h / 0.3); // auto shelfs
-		gui.add( params, 'quantity', 1, Math.floor(params.h / 0.2) ).step(1).name('▪ Кількість');
+		//params.quantity = Math.floor(params.h / 0.3); // auto shelfs
+		gui.rebuild[i++] = gui.add( params, 'quantity', 1, Math.floor(params.h / 0.2) ).step(1).name('▪ Кількість');
 	}
 	
-
-	//gui.remember(fizzyText);
-
-	//for (var key in gui)
-//		alert(gui[key]);
-
-	//gui.add( params, 'quantity').step(1).name('▪ Quantity').min(0).max(params.l / 0.2).listen().updateDisplay(); //handle max
-//	for (var i = 0; i < params.vDivide; i++)
-//	{
-//		if (params.vDivide > 0)
-//			vFolders[i] = gui.add( params, 'test' );
-//	}
-//	var ggg = gui.add (params, 'test' );
-//	gui.remove(ggg);
-//	gui.add( params, 'profileLen').listen();
-//	for (var n = 0; n != product.segmentQuantity; n++)
-//	{
-//	if (product.segmentQuantity > 0)
-//		gui.add( params, 'test' );
-//	}
-//	var ggg = gui.add(params, 'test');
-
-//	gui.add(params, 'test');
-//	gui.hide(ggg);
-//	ggg.domElement.setAttribute("hidden", true);
 	gui.open();
 }
 
