@@ -119,14 +119,14 @@
 			var params = {
 				shadows: true,
 				exposure: 0.68, //0.68
-				bulbPower: Object.keys(bulbLuminousPowers)[5],
-				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[2],
+				bulbPower: Object.keys(bulbLuminousPowers)[4],
+				hemiIrradiance: Object.keys(hemiLuminousIrradiances)[4],
 				profileColor: Object.keys(profileColorChoose)[0],
 				woodColor: Object.keys(woodColorChoose)[4],
-				h: 1.4,
+				h: 0.75,
 				w: 0.6,
-				l: 0.8,
-				options: Object.keys(segmentOptions)[2],
+				l: 1.2,
+				options: Object.keys(segmentOptions)[0],
 				quantity: 1,
 		//		vDivide: 0,
 			//	segment: 'segment',
@@ -221,6 +221,15 @@
 				product.platesV = [];
 				product.doors = [];
 				product.handles = [];
+				product.sectionL = 0;
+				product.sectionH = 0;
+				product.sectionW = 0;
+				product.nVplates = 0;
+				product.topOffset = 0.005;
+				product.handleL = 0.04;
+				product.handleH = 0.04;
+				product.handleW = 0.01;
+				product.handleOffset = 0.05;
 		//		product.wood = [][];
 			//	product.lPrev = -1;
 			//	product.hPrev = -1;
@@ -246,9 +255,9 @@
 				addWoodMaterial(2, product, 0x000000);
 				addWoodMaterial(3, product, 0xffffff, "textures/o01.jpg", "textures/o02.jpg", "textures/o03.jpg");
 				addWoodMaterial(4, product, 0xffffff, "textures/o11.jpg", "textures/o12.jpg", "textures/o13.jpg");
-
-
+				product.doorMat = {};
 		//		addProduct(product);
+
 
 				renderer = new THREE.WebGLRenderer({ antialias: true });
 				renderer.physicallyCorrectLights = true;

@@ -8,7 +8,7 @@ function addProduct(product, scene)
 	product.topEdgeLen = 0;
 
 	var half = product.profileThick / 2;
-	var offset = 0.005;
+	var offset = product.topOffset;
 	var hProfil = product.h - product.topThick - product.botThick;
 	product.profileG = new THREE.BoxGeometry(product.profileThick, hProfil, product.profileThick);
 	addProfile(0, -product.l / 2 + half + offset, hProfil / 2 + product.botThick, -product.w / 2 + half + offset, product, scene);	
@@ -57,10 +57,14 @@ function addProduct(product, scene)
 	}
 	else if (segmentOptions[params.options] == 2)
 	{
+		product.sectionL = product.l - product.profileThick * 2 - product.topOffset * 2;
+		product.sectionH = product.h - product.topThick - product.profileThick - 0.15;
+		product.sectionW = product.w - product.topOffset * 2;
 
-		var segmentL = product.l - product.profileThick * 2 - offset * 2;
-		var segmentH = product.h - product.topThick - product.profileThick - 0.15;
-		var segmentW = product.w - offset * 2;
+
+		var segmentL = product.sectionL;
+		var segmentH = product.sectionH;
+		var segmentW = product.sectionW;
 		
 		product.plateTopBotG = new THREE.BoxGeometry(segmentL, product.plateThick, segmentW - product.plateThick);
 		product.plateBotW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
@@ -89,7 +93,8 @@ function addProduct(product, scene)
 			product.plateEdgeLen += (plateBackL + segmentH) * 2;
 		}
 
-		var vPlatesQuantity = params.quantity + 1;
+		product.nVplates = params.quantity + 1;
+		var vPlatesQuantity = product.nVplates;
 		product.plateVerticalG = new THREE.BoxGeometry(product.plateThick, segmentH - product.plateThick * 2, segmentW - product.plateThick); 
 		for (var i = 0; i != vPlatesQuantity; i++)
 		{
@@ -109,12 +114,12 @@ function addProduct(product, scene)
 		product.plateHorisontalG = new THREE.BoxGeometry(hPlatesL, product.plateThick, segmentW - product.plateThick * 2);
 		product.shelfG = new THREE.BoxGeometry(hPlatesL, product.plateThick, segmentW - product.plateThick * 2 - 0.02);
 		var k = 0, l = 0, s = 0;
-		var doorMat = {};
+		//var product.doorMat = {};
 		for (var key in product.woodMat[product.woodColor])
-			doorMat[key] = product.woodMat[product.woodColor][key];
-		doorMat.transparent = true;
-		doorMat.opacity = 0.8;
-		var doorL, doorH, div3;
+			product.doorMat[key] = product.woodMat[product.woodColor][key];
+		product.doorMat.transparent = true;
+		product.doorMat.opacity = 0.8;
+		//var doorL, doorH, div3;
 		for (var i = 0; i != params.quantity; i++)
 		{
 			for (var r = 0; r != segmentParams[i].quantity; r++)
@@ -149,6 +154,9 @@ function addProduct(product, scene)
 				}
 				if (secondSegmentOptions[segmentParams[i].segmentParams2[r].options] == 1)
 				{
+					l += addDoors(i, l, r);
+
+					/*
 					doorL = hPlatesL - 0.003;
 					doorH = (segmentH - product.plateThick) / segmentParams[i].quantity - product.plateThick - 0.003;
 					div3 = ((segmentH - product.plateThick) / (segmentParams[i].quantity) * (r)) + 0.15 + doorH / 2 + product.plateThick + 0.0015;
@@ -176,6 +184,7 @@ function addProduct(product, scene)
 
 					product.plateSquare += doorL * (segmentH - product.plateThick);
 					product.plateEdgeLen += (doorL + (segmentH - product.plateThick)) * 2;
+					*/
 				}
 			}
 		}
@@ -187,6 +196,67 @@ function addProduct(product, scene)
 
 }
 
+function addDoors(i, l, r)
+{
+	var doorL = (product.sectionL - product.plateThick * product.nVplates) / params.quantity - 0.003;
+	var doorH = (product.sectionH - product.plateThick) / segmentParams[i].quantity - product.plateThick - 0.003;
+	var doorPosL = (-product.sectionL / 2 + doorL / 2 + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i;
+	var doorPosH = ((product.sectionH - product.plateThick) / (segmentParams[i].quantity) * (r)) + 0.15 + doorH / 2 + product.plateThick + 0.0015;
+	
+	if (doorL <= 0.6)
+	{
+		product.doorG = new THREE.BoxGeometry(doorL, doorH, product.plateThick);
+		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
+		product.doors[l].position.set(doorPosL, doorPosH, product.sectionW / 2 - product.plateThick / 2);
+		product.doors[l].castShadow = true;
+		scene.add(product.doors[l]);
+		addHandle(doorL, doorPosH, i, l, i, 0);
+		product.plateSquare += doorL * (product.sectionH - product.plateThick);
+		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
+		return (1);
+	}
+	else
+	{
+		product.doorG = new THREE.BoxGeometry(doorL / 2 - 0.0015, doorH, product.plateThick);
+		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
+		product.doors[l].position.set(doorPosL - doorL / 4, doorPosH, product.sectionW / 2 - product.plateThick / 2);
+		product.doors[l].castShadow = true;
+		scene.add(product.doors[l]);
+		addHandle(doorL, doorPosH, i, l, 0, -(doorL / 2));
+		l++;
+		product.plateSquare += doorL * (product.sectionH - product.plateThick);
+		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
+
+		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
+		product.doors[l].position.set(doorPosL + doorL / 4, doorPosH, product.sectionW / 2 - product.plateThick / 2);
+		product.doors[l].castShadow = true;
+		scene.add(product.doors[l]);
+		addHandle(doorL, doorPosH, i, l, 1, doorL / 2);
+		l++;
+		product.plateSquare += doorL * (product.sectionH - product.plateThick);
+		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
+		return (2);
+	}
+}
+
+function addHandle(doorL, doorPosH, i, l, right, lOffset)
+{
+	var handleOffset;
+	var handlePosL, handlePosH, handlePosW;
+
+	if (right == 0)
+		handleOffset = doorL - product.handleOffset;
+	else
+		handleOffset = product.handleOffset;
+	handlePosL = (-product.sectionL / 2 + handleOffset + lOffset + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i;
+	handlePosH = doorPosH;
+	handlePosW = product.sectionW / 2;
+	product.handleG = new THREE.BoxGeometry(product.handleL, product.handleH, product.handleW);
+	product.handles[l] = new THREE.Mesh(product.handleG, product.profileMat[product.profileColor]);
+	product.handles[l].position.set(handlePosL, handlePosH, handlePosW);
+	product.handles[l].castWhadow = true;
+	scene.add(product.handles[l]);
+}
 
 function addWoodMaterial(index, product, colorMat, mat1, mat2, mat3)
 {
@@ -443,6 +513,7 @@ function guiCreate()
 	gui.add( params, 'shadows' );
 	//main params
 	gui.add( params, 'price').name('▪ Ціна (uah)').listen();
+
 	gui.rebuild[i++] = gui.add( params, 'profileColor', Object.keys( profileColorChoose ) ).name('▪ Колір профіля');
 	gui.rebuild[i++] = gui.add( params, 'woodColor', Object.keys( woodColorChoose ) ).name('▪ Текстура плити');
 	//rebuild params (onChange rebuild GUI)
