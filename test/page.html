@@ -57,7 +57,7 @@
 			bulbLight, bulbMat, hemiLight,
 			object, loader, stats;
 			var ballMat, cubeMat, floorMat;
-			var product = {};
+			var pdc = {};
 			// ref for lumens: http://www.power-sure.com/lumens.htm
 			var bulbLuminousPowers = {
 				"110000 lm (1000W)": 110000,
@@ -210,53 +210,53 @@
 				floorMesh.rotation.x = -Math.PI / 2.0;
 				scene.add( floorMesh );
 				
-			//	product.h = 0.75;
-			//	product.w = 1;
-			//	product.l = 0.6;
-		//		product.profileColor = 0;
-				product.profile = [];
-				product.shelfs = [];
-				product.platesB = [];
-				product.platesH = [];
-				product.platesV = [];
-				product.doors = [];
-				product.handles = [];
-				product.sectionL = 0;
-				product.sectionH = 0;
-				product.sectionW = 0;
-				product.nVplates = 0;
-				product.topOffset = 0.005;
-				product.handleL = 0.04;
-				product.handleH = 0.04;
-				product.handleW = 0.01;
-				product.handleOffset = 0.05;
-		//		product.wood = [][];
-			//	product.lPrev = -1;
-			//	product.hPrev = -1;
-			//	product.mainSegmentStatus = 0;
-			//	product.segmentQuantityPrev = -1;
-			//	product.segmentQuantity = 0;
-				product.profileLen = 0;
-				product.topSquare = 0;
-				product.topEdgeLen = 0;
-				product.plateSquare = 0;
-				product.plateEdgeLen = 0;
-				product.profileThick = 0.03 * scale;
-				product.topThick = 0.025 * scale;
-				product.botThick = 0.025 * scale;
-				product.plateThick = 0.018 * scale;
-				product.profileMat = [];
-				addProfileMaterial(0, product, 0xe5e5e5, 0.8);
-				addProfileMaterial(1, product, 0xffffff, 0.5);
-				addProfileMaterial(2, product, 0x131313, 0.9);
-				product.woodMat = [];
-				addWoodMaterial(0, product, 0xffffff);
-				addWoodMaterial(1, product, 0x797979);
-				addWoodMaterial(2, product, 0x000000);
-				addWoodMaterial(3, product, 0xffffff, "textures/o01.jpg", "textures/o02.jpg", "textures/o03.jpg");
-				addWoodMaterial(4, product, 0xffffff, "textures/o11.jpg", "textures/o12.jpg", "textures/o13.jpg");
-				product.doorMat = {};
-		//		addProduct(product);
+			//	pdc.h = 0.75;
+			//	pdc.w = 1;
+			//	pdc.l = 0.6;
+		//		pdc.profileColor = 0;
+				pdc.profile = [];
+				pdc.shelfs = [];
+				pdc.platesB = [];
+				pdc.platesH = [];
+				pdc.platesV = [];
+				pdc.doors = [];
+				pdc.handles = [];
+				pdc.sectionL = 0;
+				pdc.sectionH = 0;
+				pdc.sectionW = 0;
+				pdc.nVplates = 0;
+				pdc.topOffset = 0.005;
+				pdc.handleL = 0.04;
+				pdc.handleH = 0.04;
+				pdc.handleW = 0.01;
+				pdc.handleOffset = 0.05;
+		//		pdc.wood = [][];
+			//	pdc.lPrev = -1;
+			//	pdc.hPrev = -1;
+			//	pdc.mainSegmentStatus = 0;
+			//	pdc.segmentQuantityPrev = -1;
+			//	pdc.segmentQuantity = 0;
+				pdc.profileLen = 0;
+				pdc.topSquare = 0;
+				pdc.topEdgeLen = 0;
+				pdc.plateSquare = 0;
+				pdc.plateEdgeLen = 0;
+				pdc.profileThk = 0.03 * scale;
+				pdc.topThk = 0.025 * scale;
+				pdc.botThk = 0.025 * scale;
+				pdc.plateThk = 0.018 * scale;
+				pdc.profileMat = [];
+				addProfileMaterial(0, pdc, 0xe5e5e5, 0.8);
+				addProfileMaterial(1, pdc, 0xffffff, 0.5);
+				addProfileMaterial(2, pdc, 0x131313, 0.9);
+				pdc.woodMat = [];
+				addWoodMaterial(0, pdc, 0xffffff);
+				addWoodMaterial(1, pdc, 0x797979);
+				addWoodMaterial(2, pdc, 0x000000);
+				addWoodMaterial(3, pdc, 0xffffff, "textures/o01.jpg", "textures/o02.jpg", "textures/o03.jpg");
+				addWoodMaterial(4, pdc, 0xffffff, "textures/o11.jpg", "textures/o12.jpg", "textures/o13.jpg");
+				pdc.doorMat = {};
+		//		addpdc(pdc);
 
 
 				renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -274,12 +274,12 @@
 				window.addEventListener( 'resize', onWindowResize, false );
 				guiCreate();
 
-				product.h = params.h * scale;
-				product.l = params.l * scale;
-				product.w = params.w * scale;
-				product.profileColor = profileColorChoose[params.profileColor];
-				product.woodColor = woodColorChoose[params.woodColor];
-				addProduct(product, scene);
+				pdc.h = params.h * scale;
+				pdc.l = params.l * scale;
+				pdc.w = params.w * scale;
+				pdc.profileColor = profileColorChoose[params.profileColor];
+				pdc.woodColor = woodColorChoose[params.woodColor];
+				addpdc(pdc, scene);
 			}
 
 			function onWindowResize() {
@@ -292,9 +292,9 @@
 			function animate() {
 				requestAnimationFrame( animate );
 				//renderGui();
-				//renderProduct();
+				//renderpdc();
 				render();
-				renderProduct();
+				renderpdc();
 				//renderGui();
 			}
 			
@@ -310,62 +310,62 @@
 				bulbLight.power = bulbLuminousPowers[ params.bulbPower ] * scale;
 				bulbMat.emissiveIntensity = bulbLight.intensity / Math.pow( 0.02, 2.0 ); // convert from intensity to irradiance at bulb surface
 				hemiLight.intensity = hemiLuminousIrradiances[ params.hemiIrradiance ] * scale;
-				var time = Date.now() * 0.0005;
-				var delta = clock.getDelta();
+		//		var time = Date.now() * 0.0005;
+		//		var delta = clock.getDelta();
 /*
-				product.h = params.h * scale;
-				product.l = params.l * scale;
-				product.w = params.w * scale;
-				product.profileColor = profileColorChoose[params.profileColor];
-				product.woodColor = woodColorChoose[params.woodColor];
+				pdc.h = params.h * scale;
+				pdc.l = params.l * scale;
+				pdc.w = params.w * scale;
+				pdc.profileColor = profileColorChoose[params.profileColor];
+				pdc.woodColor = woodColorChoose[params.woodColor];
 */
-			//	delProduct(product, scene);
-			//	addProduct(product, scene);
-				params.profileLen = product.profileLen; //??
+			//	delpdc(pdc, scene);
+			//	addpdc(pdc, scene);
+//				params.profileLen = pdc.profileLen; //??
 		//		bulbLight.position.y = Math.cos( time ) * 0.75 + 1.25;
 		//		scene.remove( bulbLight );
 		//		scene.add( bulbLight );
 			
 /*
-				if (product.mainSegmentStatus != segmentOptions[params.options])
+				if (pdc.mainSegmentStatus != segmentOptions[params.options])
 				{
-					product.mainSegmentStatus = segmentOptions[params.options];
-			//	//	product.segmentQuantityPrev = product.segmentQuantity;
+					pdc.mainSegmentStatus = segmentOptions[params.options];
+			//	//	pdc.segmentQuantityPrev = pdc.segmentQuantity;
 					gui.destroy();
 					guiCreate();
 					params.quantity = 0;
 				}
 				*/
 				/*
-				if (product.lPrev != product.l)
+				if (pdc.lPrev != pdc.l)
 				{
-					product.lPrev = product.l;
+					pdc.lPrev = pdc.l;
 					gui.destroy();
 					guiCreate();
 				}
-				//product.segmentQuantity = params.quantity;
-				//if (product.segmentQuantity != product.segmentQuantityPrev)
+				//pdc.segmentQuantity = params.quantity;
+				//if (pdc.segmentQuantity != pdc.segmentQuantityPrev)
 					//params.quantity = 0;
 */
 				
 				//if (segmentOptions[params.options] == 0)
 				//{
-				//	if (product.lPrev != -1 || product.hPrev != -1)
+				//	if (pdc.lPrev != -1 || pdc.hPrev != -1)
 			//			gui.remove(mQuantity);
 		//			params.quantity = 0;
-	//				//product.lPrev = product.l;
-//					//product.hPrev = product.h;
+	//				//pdc.lPrev = pdc.l;
+//					//pdc.hPrev = pdc.h;
 //				}
-			//	product.segmentQuantity = params.quantity;
+			//	pdc.segmentQuantity = params.quantity;
 			/*
 				if (segmentOptions[params.options] == 2)
 				{
-					if (product.lPrev != product.l || product.mainSegmentStatus != segmentOptions[params.options])
+					if (pdc.lPrev != pdc.l || pdc.mainSegmentStatus != segmentOptions[params.options])
 					{
-						if (product.lPrev != -1 || product.hPrev != -1) //first init
+						if (pdc.lPrev != -1 || pdc.hPrev != -1) //first init
 							gui.remove(mQuantity);
-						product.lPrev = product.l;
-						product.mainSegmentStatus = segmentOptions[params.options];
+						pdc.lPrev = pdc.l;
+						pdc.mainSegmentStatus = segmentOptions[params.options];
 						params.quantity = Math.ceil(params.l / 0.8);
 						// make it for l and h
 						mQuantity = gui.add( params, 'quantity', Math.ceil(params.l / 0.8), params.l / 0.2 ).step(1).name('▪ Секції');
@@ -373,12 +373,12 @@
 				}
 				else if (segmentOptions[params.options] == 1)
 				{
-					if (product.hPrev != product.h || product.mainSegmentStatus != segmentOptions[params.options])
+					if (pdc.hPrev != pdc.h || pdc.mainSegmentStatus != segmentOptions[params.options])
 					{
-						if (product.hPrev != -1 || product.lPrev != -1) //first init
+						if (pdc.hPrev != -1 || pdc.lPrev != -1) //first init
 							gui.remove(mQuantity);
-						product.hPrev = product.h;
-						product.mainSegmentStatus = segmentOptions[params.options];
+						pdc.hPrev = pdc.h;
+						pdc.mainSegmentStatus = segmentOptions[params.options];
 						params.quantity = Math.floor(params.h / 0.3);
 						mQuantity = gui.add( params, 'quantity', 1, Math.floor(params.h / 0.2) ).step(1).name('▪ Кількість');
 					}
@@ -386,58 +386,58 @@
 				else
 				{
 
-					if (product.mainSegmentStatus != segmentOptions[params.options])
+					if (pdc.mainSegmentStatus != segmentOptions[params.options])
 					{
-						if (product.hPrev != -1 || product.lPrev != -1)
+						if (pdc.hPrev != -1 || pdc.lPrev != -1)
 							gui.remove(mQuantity);
-						product.hPrev = -1;
-						product.lPrev = -1;
-						product.mainSegmentStatus = segmentOptions[params.options];
+						pdc.hPrev = -1;
+						pdc.lPrev = -1;
+						pdc.mainSegmentStatus = segmentOptions[params.options];
 					}
 				}
 				*/
 			//	else
 			//	{
-			//		if (product.lPrev != -1) //first init
+			//		if (pdc.lPrev != -1) //first init
 			//			gui.remove(mQuantity);
-			//		product.lPrev = -1;
+			//		pdc.lPrev = -1;
 			//	}
 				/*
-				if (product.hPrev != product.h && segmentOptions[params.options] != 3)
+				if (pdc.hPrev != pdc.h && segmentOptions[params.options] != 3)
 				{
-					if (product.hPrev != -1) //first init
+					if (pdc.hPrev != -1) //first init
 						gui.remove(mQuantity);
-					product.hPrev = product.h;
+					pdc.hPrev = pdc.h;
 					params.quantity = 0;
 					mQuantity = gui.add( params, 'quantity', 0, params.h / 0.2 ).step(1).name('▪ Quantity');
 				}
 				else if (segmentOptions[params.options] != 3)
 				{
-					if (product.hPrev != -1) //first init
+					if (pdc.hPrev != -1) //first init
 						gui.remove(mQuantity);
-					product.hPrev = -1;
+					pdc.hPrev = -1;
 				}
 				*/
 			//	if (segmentOptions[params.options] == 3)
 			/*
-				product.segmentQuantity = params.quantity;
+				pdc.segmentQuantity = params.quantity;
 				
-				if ((product.segmentQuantity != product.segmentQuantityPrev && segmentOptions[params.options] == 2)
+				if ((pdc.segmentQuantity != pdc.segmentQuantityPrev && segmentOptions[params.options] == 2)
 					
-					/* || product.lPrev != product.l)
+					/* || pdc.lPrev != pdc.l)
 				{
 					segmentParams.options = 0;
 					segmentParams.quantity = 0;
-					if (product.segmentQuantityPrev != -1) //first init
-						guiRemoveSegm(0, product.segmentQuantityPrev)
-					product.segmentQuantityPrev = product.segmentQuantity;
+					if (pdc.segmentQuantityPrev != -1) //first init
+						guiRemoveSegm(0, pdc.segmentQuantityPrev)
+					pdc.segmentQuantityPrev = pdc.segmentQuantity;
 					guiAddSegm(0, params.quantity);
 				} 
 				else if (segmentOptions[params.options] != 2)
 				{
-					if (product.segmentQuantityPrev != -1) //first init
-						guiRemoveSegm(0, product.segmentQuantityPrev)
-					product.segmentQuantityPrev = -1;
+					if (pdc.segmentQuantityPrev != -1) //first init
+						guiRemoveSegm(0, pdc.segmentQuantityPrev)
+					pdc.segmentQuantityPrev = -1;
 				}
 				
 */

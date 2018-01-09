@@ -1,124 +1,124 @@
 
 
-function addProduct(product, scene)
+function addpdc(pdc, scene)
 {
-	product.plateSquare = 0;
-	product.topSquare = 0;
-	product.plateEdgeLen = 0;
-	product.topEdgeLen = 0;
+	pdc.plateSquare = 0;
+	pdc.topSquare = 0;
+	pdc.plateEdgeLen = 0;
+	pdc.topEdgeLen = 0;
 
-	var half = product.profileThick / 2;
-	var offset = product.topOffset;
-	var hProfil = product.h - product.topThick - product.botThick;
-	product.profileG = new THREE.BoxGeometry(product.profileThick, hProfil, product.profileThick);
-	addProfile(0, -product.l / 2 + half + offset, hProfil / 2 + product.botThick, -product.w / 2 + half + offset, product, scene);	
-	addProfile(1, product.l / 2 - half - offset, hProfil / 2 + product.botThick, -product.w / 2 + half + offset, product, scene);
-	addProfile(2, -product.l / 2 + half + offset, hProfil / 2 + product.botThick, product.w / 2 - half - offset, product, scene);
-	addProfile(3, product.l / 2 - half - offset, hProfil / 2 + product.botThick, product.w / 2 - half - offset, product, scene);	
+	var half = pdc.profileThk / 2;
+	var offset = pdc.topOffset;
+	var hProfil = pdc.h - pdc.topThk - pdc.botThk;
+	pdc.profileG = new THREE.BoxGeometry(pdc.profileThk, hProfil, pdc.profileThk);
+	addProfile(0, -pdc.l / 2 + half + offset, hProfil / 2 + pdc.botThk, -pdc.w / 2 + half + offset, pdc, scene);	
+	addProfile(1, pdc.l / 2 - half - offset, hProfil / 2 + pdc.botThk, -pdc.w / 2 + half + offset, pdc, scene);
+	addProfile(2, -pdc.l / 2 + half + offset, hProfil / 2 + pdc.botThk, pdc.w / 2 - half - offset, pdc, scene);
+	addProfile(3, pdc.l / 2 - half - offset, hProfil / 2 + pdc.botThk, pdc.w / 2 - half - offset, pdc, scene);	
 
-	var wProfil = product.w - product.profileThick * 2 - offset * 2;
-	product.profileG = new THREE.BoxGeometry(product.profileThick, product.profileThick, wProfil);
-	addProfile(4, -product.l / 2 + half + offset, product.botThick + half, 0, product, scene);
-	addProfile(5, -product.l / 2 + half + offset, hProfil + 0.010, 0, product, scene);
-	addProfile(6, product.l / 2 - half - offset, product.botThick + half, 0, product, scene);
-	addProfile(7, product.l / 2 - half - offset, hProfil + 0.010, 0, product, scene);
+	var wProfil = pdc.w - pdc.profileThk * 2 - offset * 2;
+	pdc.profileG = new THREE.BoxGeometry(pdc.profileThk, pdc.profileThk, wProfil);
+	addProfile(4, -pdc.l / 2 + half + offset, pdc.botThk + half, 0, pdc, scene);
+	addProfile(5, -pdc.l / 2 + half + offset, hProfil + 0.010, 0, pdc, scene);
+	addProfile(6, pdc.l / 2 - half - offset, pdc.botThk + half, 0, pdc, scene);
+	addProfile(7, pdc.l / 2 - half - offset, hProfil + 0.010, 0, pdc, scene);
 
-	var	lProfil = product.l - product.profileThick * 2 - offset * 2;
-	product.profileG = new THREE.BoxGeometry(lProfil, product.profileThick, product.profileThick);
-	addProfile(8, 0, hProfil + 0.01, product.w / 2 - half - offset, product, scene);
-	addProfile(9, 0, hProfil + 0.01, -product.w / 2 + half + offset, product, scene);
+	var	lProfil = pdc.l - pdc.profileThk * 2 - offset * 2;
+	pdc.profileG = new THREE.BoxGeometry(lProfil, pdc.profileThk, pdc.profileThk);
+	addProfile(8, 0, hProfil + 0.01, pdc.w / 2 - half - offset, pdc, scene);
+	addProfile(9, 0, hProfil + 0.01, -pdc.w / 2 + half + offset, pdc, scene);
 
-	product.topG = new THREE.BoxGeometry(product.l, product.topThick, product.w);
+	pdc.topG = new THREE.BoxGeometry(pdc.l, pdc.topThk, pdc.w);
 //	var modifier = new THREE.BufferSubdivisionModifier(10);
-//	modifier.modify(product.topG);
-	product.topW = new THREE.Mesh(product.topG, product.woodMat[product.woodColor]);
-	product.topW.position.set(0, product.h - product.topThick / 2, 0);
-	product.topW.castShadow = true;
-	scene.add(product.topW);
+//	modifier.modify(pdc.topG);
+	pdc.topW = new THREE.Mesh(pdc.topG, pdc.woodMat[pdc.woodColor]);
+	pdc.topW.position.set(0, pdc.h - pdc.topThk / 2, 0);
+	pdc.topW.castShadow = true;
+	scene.add(pdc.topW);
 
-	product.topSquare += product.l * product.w;
-	product.topEdgeLen += (product.l + product.w) * 2;
+	pdc.topSquare += pdc.l * pdc.w;
+	pdc.topEdgeLen += (pdc.l + pdc.w) * 2;
 
 	if (segmentOptions[params.options] == 1)
 	{
-		var inputH = params.h - product.topThick - product.profileThick - 0.03;
-		product.shelfG = new THREE.BoxGeometry(product.l - 0.01, product.topThick, product.w - 0.01 - 0.06);
+		var inputH = params.h - pdc.topThk - pdc.profileThk - 0.03;
+		pdc.shelfG = new THREE.BoxGeometry(pdc.l - 0.01, pdc.topThk, pdc.w - 0.01 - 0.06);
 		for (var i = 0; i != params.quantity; i++)
 		{
 
-			product.shelfs[i] = new THREE.Mesh(product.shelfG, product.woodMat[product.woodColor]);
-			product.shelfs[i].position.set(0, 0.03 + (inputH / (params.quantity + 1) * (i + 1)) , 0);
-			product.shelfs[i].castShadow = true;
-			scene.add(product.shelfs[i]);
+			pdc.shelfs[i] = new THREE.Mesh(pdc.shelfG, pdc.woodMat[pdc.woodColor]);
+			pdc.shelfs[i].position.set(0, 0.03 + (inputH / (params.quantity + 1) * (i + 1)) , 0);
+			pdc.shelfs[i].castShadow = true;
+			scene.add(pdc.shelfs[i]);
 
-			product.topSquare += (product.l - 0.01) * (product.w - 0.01 - 0.06);
-			product.topEdgeLen += ((product.l - 0.01) + (product.w - 0.01 - 0.06)) * 2;
+			pdc.topSquare += (pdc.l - 0.01) * (pdc.w - 0.01 - 0.06);
+			pdc.topEdgeLen += ((pdc.l - 0.01) + (pdc.w - 0.01 - 0.06)) * 2;
 		}
 	}
 	else if (segmentOptions[params.options] == 2)
 	{
-		product.sectionL = product.l - product.profileThick * 2 - product.topOffset * 2;
-		product.sectionH = product.h - product.topThick - product.profileThick - 0.15;
-		product.sectionW = product.w - product.topOffset * 2;
+		pdc.sectionL = pdc.l - pdc.profileThk * 2 - pdc.topOffset * 2;
+		pdc.sectionH = pdc.h - pdc.topThk - pdc.profileThk - 0.15;
+		pdc.sectionW = pdc.w - pdc.topOffset * 2;
 
 
-		var segmentL = product.sectionL;
-		var segmentH = product.sectionH;
-		var segmentW = product.sectionW;
+		var segmentL = pdc.sectionL;
+		var segmentH = pdc.sectionH;
+		var segmentW = pdc.sectionW;
 		
-		product.plateTopBotG = new THREE.BoxGeometry(segmentL, product.plateThick, segmentW - product.plateThick);
-		product.plateBotW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
-		product.plateBotW.position.set(0, product.plateThick / 2 + 0.15, product.plateThick / 2);
-		product.plateBotW.castShadow = true;
-		scene.add(product.plateBotW);
-		product.plateTopW = new THREE.Mesh(product.plateTopBotG, product.woodMat[product.woodColor]);
-		product.plateTopW.position.set(0, -product.plateThick / 2 + segmentH + 0.15, product.plateThick / 2);
-		product.plateTopW.castShadow = true;
-		scene.add(product.plateTopW);
+		pdc.plateTopBotG = new THREE.BoxGeometry(segmentL, pdc.plateThk, segmentW - pdc.plateThk);
+		pdc.plateBotW = new THREE.Mesh(pdc.plateTopBotG, pdc.woodMat[pdc.woodColor]);
+		pdc.plateBotW.position.set(0, pdc.plateThk / 2 + 0.15, pdc.plateThk / 2);
+		pdc.plateBotW.castShadow = true;
+		scene.add(pdc.plateBotW);
+		pdc.plateTopW = new THREE.Mesh(pdc.plateTopBotG, pdc.woodMat[pdc.woodColor]);
+		pdc.plateTopW.position.set(0, -pdc.plateThk / 2 + segmentH + 0.15, pdc.plateThk / 2);
+		pdc.plateTopW.castShadow = true;
+		scene.add(pdc.plateTopW);
 
-		product.plateSquare += (segmentL * segmentW - product.plateThick * 2) * 2;
-		product.plateEdgeLen += (segmentL + (segmentW - product.plateThick * 2)) * 2 * 2;
+		pdc.plateSquare += (segmentL * segmentW - pdc.plateThk * 2) * 2;
+		pdc.plateEdgeLen += (segmentL + (segmentW - pdc.plateThk * 2)) * 2 * 2;
 
 		var plateBackL = segmentL / params.quantity;
-		product.plateBackG = new THREE.BoxGeometry(plateBackL, segmentH, product.plateThick);
+		pdc.plateBackG = new THREE.BoxGeometry(plateBackL, segmentH, pdc.plateThk);
 		for (var i = 0; i != params.quantity; i++)
 		{
-			product.platesB[i] = new THREE.Mesh(product.plateBackG, product.woodMat[product.woodColor]);
-			product.platesB[i].position.set((-plateBackL / 2 * params.quantity) + plateBackL / 2 + plateBackL * (i + 0),
-				segmentH / 2 + 0.15,  -segmentW / 2 + product.plateThick / 2);
-			product.platesB[i].castShadow = true;
-			scene.add(product.platesB[i]);
+			pdc.platesB[i] = new THREE.Mesh(pdc.plateBackG, pdc.woodMat[pdc.woodColor]);
+			pdc.platesB[i].position.set((-plateBackL / 2 * params.quantity) + plateBackL / 2 + plateBackL * (i + 0),
+				segmentH / 2 + 0.15,  -segmentW / 2 + pdc.plateThk / 2);
+			pdc.platesB[i].castShadow = true;
+			scene.add(pdc.platesB[i]);
 
-			product.plateSquare += plateBackL * segmentH;
-			product.plateEdgeLen += (plateBackL + segmentH) * 2;
+			pdc.plateSquare += plateBackL * segmentH;
+			pdc.plateEdgeLen += (plateBackL + segmentH) * 2;
 		}
 
-		product.nVplates = params.quantity + 1;
-		var vPlatesQuantity = product.nVplates;
-		product.plateVerticalG = new THREE.BoxGeometry(product.plateThick, segmentH - product.plateThick * 2, segmentW - product.plateThick); 
+		pdc.nVplates = params.quantity + 1;
+		var vPlatesQuantity = pdc.nVplates;
+		pdc.plateVerticalG = new THREE.BoxGeometry(pdc.plateThk, segmentH - pdc.plateThk * 2, segmentW - pdc.plateThk); 
 		for (var i = 0; i != vPlatesQuantity; i++)
 		{
-			product.platesV[i] = new THREE.Mesh(product.plateVerticalG, product.woodMat[product.woodColor]);
-			product.platesV[i].position.set((-segmentL / 2 + product.plateThick / 2) + ((segmentL - product.plateThick) / params.quantity * i),
-								(segmentH - product.plateThick * 2) / 2 + 0.15 + product.plateThick, product.plateThick / 2);
-			product.platesV[i].castShadow = true;
-			scene.add(product.platesV[i]);
+			pdc.platesV[i] = new THREE.Mesh(pdc.plateVerticalG, pdc.woodMat[pdc.woodColor]);
+			pdc.platesV[i].position.set((-segmentL / 2 + pdc.plateThk / 2) + ((segmentL - pdc.plateThk) / params.quantity * i),
+								(segmentH - pdc.plateThk * 2) / 2 + 0.15 + pdc.plateThk, pdc.plateThk / 2);
+			pdc.platesV[i].castShadow = true;
+			scene.add(pdc.platesV[i]);
 
-			product.plateSquare += (segmentH - product.plateThick * 2) * (segmentW - product.plateThick * 2);
-			product.plateEdgeLen += ((segmentH - product.plateThick * 2) + (segmentW - product.plateThick * 2)) * 2;
+			pdc.plateSquare += (segmentH - pdc.plateThk * 2) * (segmentW - pdc.plateThk * 2);
+			pdc.plateEdgeLen += ((segmentH - pdc.plateThk * 2) + (segmentW - pdc.plateThk * 2)) * 2;
 		}
-	//	product.woodMat[product.woodColor].transparent = true;
-	//	product.woodMat[product.woodColor].opacity = 0.5;
+	//	pdc.woodMat[pdc.woodColor].transparent = true;
+	//	pdc.woodMat[pdc.woodColor].opacity = 0.5;
 	
-		var hPlatesL = (segmentL - product.plateThick * vPlatesQuantity) / params.quantity;
-		product.plateHorisontalG = new THREE.BoxGeometry(hPlatesL, product.plateThick, segmentW - product.plateThick * 2);
-		product.shelfG = new THREE.BoxGeometry(hPlatesL, product.plateThick, segmentW - product.plateThick * 2 - 0.02);
+		var hPlatesL = (segmentL - pdc.plateThk * vPlatesQuantity) / params.quantity;
+		pdc.plateHorisontalG = new THREE.BoxGeometry(hPlatesL, pdc.plateThk, segmentW - pdc.plateThk * 2);
+		pdc.shelfG = new THREE.BoxGeometry(hPlatesL, pdc.plateThk, segmentW - pdc.plateThk * 2 - 0.02);
 		var k = 0, l = 0, s = 0;
-		//var product.doorMat = {};
-		for (var key in product.woodMat[product.woodColor])
-			product.doorMat[key] = product.woodMat[product.woodColor][key];
-		product.doorMat.transparent = true;
-		product.doorMat.opacity = 0.8;
+		//var pdc.doorMat = {};
+		for (var key in pdc.woodMat[pdc.woodColor])
+			pdc.doorMat[key] = pdc.woodMat[pdc.woodColor][key];
+		pdc.doorMat.transparent = true;
+		pdc.doorMat.opacity = 0.8;
 		//var doorL, doorH, div3;
 		for (var i = 0; i != params.quantity; i++)
 		{
@@ -126,141 +126,108 @@ function addProduct(product, scene)
 			{
 				if (r > 0)
 				{
-					product.platesH[k] = new THREE.Mesh(product.plateHorisontalG, product.woodMat[product.woodColor]);
-					product.platesH[k].position.set((-segmentL / 2 + hPlatesL / 2 + product.plateThick) + (hPlatesL + product.plateThick) * i, 
-						0.15 + (segmentH / (segmentParams[i].quantity ) * (r)), product.plateThick);
-					product.platesH[k].castShadow = true;
-					scene.add(product.platesH[k]);
+					pdc.platesH[k] = new THREE.Mesh(pdc.plateHorisontalG, pdc.woodMat[pdc.woodColor]);
+					pdc.platesH[k].position.set((-segmentL / 2 + hPlatesL / 2 + pdc.plateThk) + (hPlatesL + pdc.plateThk) * i, 
+						0.15 + (segmentH / (segmentParams[i].quantity ) * (r)), pdc.plateThk);
+					pdc.platesH[k].castShadow = true;
+					scene.add(pdc.platesH[k]);
 					k++;
 
-					product.plateSquare += hPlatesL * (segmentW - product.plateThick * 2 - 0.02);
-					product.plateEdgeLen += (hPlatesL + (segmentW - product.plateThick * 2 - 0.02)) * 2;
+					pdc.plateSquare += hPlatesL * (segmentW - pdc.plateThk * 2);
+					pdc.plateEdgeLen += (hPlatesL + (segmentW - pdc.plateThk * 2)) * 2;
 				}
 				//polki
 				for (var j = 0; j != segmentParams[i].segmentParams2[r].quantity; j++)
 				{
 					var div1 = (segmentH / segmentParams[i].quantity / (segmentParams[i].segmentParams2[r].quantity + 1) * (j + 1));
 					var div2 = (segmentH / (segmentParams[i].quantity) * (r));
-					product.shelfs[s] = new THREE.Mesh(product.plateHorisontalG, product.woodMat[product.woodColor]);
-					product.shelfs[s].position.set((-segmentL / 2 + hPlatesL / 2 + product.plateThick) + (hPlatesL + product.plateThick) * i, 
-						0.15 + div1 + div2, -product.plateThick / 2);
-					product.shelfs[s].castShadow = true;
-					scene.add(product.shelfs[s]);
+					pdc.shelfs[s] = new THREE.Mesh(pdc.plateHorisontalG, pdc.woodMat[pdc.woodColor]);
+					pdc.shelfs[s].position.set((-segmentL / 2 + hPlatesL / 2 + pdc.plateThk) + (hPlatesL + pdc.plateThk) * i, 
+						0.15 + div1 + div2, -pdc.plateThk / 2);
+					pdc.shelfs[s].castShadow = true;
+					scene.add(pdc.shelfs[s]);
 					s++;
 
-					product.plateSquare += hPlatesL * (segmentW - product.plateThick * 2 - 0.02);
-					product.plateEdgeLen += (hPlatesL + (segmentW - product.plateThick * 2 - 0.02)) * 2;
+					pdc.plateSquare += hPlatesL * (segmentW - pdc.plateThk * 2 - 0.02);
+					pdc.plateEdgeLen += (hPlatesL + (segmentW - pdc.plateThk * 2 - 0.02)) * 2;
 
 				}
 				if (secondSegmentOptions[segmentParams[i].segmentParams2[r].options] == 1)
-				{
 					l += addDoors(i, l, r);
-
-					/*
-					doorL = hPlatesL - 0.003;
-					doorH = (segmentH - product.plateThick) / segmentParams[i].quantity - product.plateThick - 0.003;
-					div3 = ((segmentH - product.plateThick) / (segmentParams[i].quantity) * (r)) + 0.15 + doorH / 2 + product.plateThick + 0.0015;
-					product.doorG = new THREE.BoxGeometry(doorL, doorH, product.plateThick);
-					product.doors[l] = new THREE.Mesh(product.doorG, doorMat);
-					product.doors[l].position.set((-segmentL / 2 + doorL / 2 + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i,
-						div3, segmentW / 2 - product.plateThick / 2);
-					product.doors[l].castShadow = true;
-					scene.add(product.doors[l]);
-
-					var handleSize;
-					if (i == 0)
-						handleSize = doorL - 0.05;
-					else
-						handleSize = 0.05;
-					product.handleG = new THREE.BoxGeometry(0.04, 0.04, 0.01);
-					product.handles[l] = new THREE.Mesh(product.handleG, product.profileMat[product.profileColor]);
-					product.handles[l].position.set((-segmentL / 2 + handleSize + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i,
-						div3, segmentW / 2);
-					product.handles[l].castWhadow = true;
-					scene.add(product.handles[l]);
-
-
-					l++;
-
-					product.plateSquare += doorL * (segmentH - product.plateThick);
-					product.plateEdgeLen += (doorL + (segmentH - product.plateThick)) * 2;
-					*/
-				}
 			}
 		}
 	}
 
 
-//	product.segmentQuantity = params.vDivide;
-	product.profileLen = hProfil * 4 + wProfil * 4 + lProfil * 2;
+//	pdc.segmentQuantity = params.vDivide;
+	pdc.profileLen = hProfil * 4 + wProfil * 4 + lProfil * 2;
 
 }
 
 function addDoors(i, l, r)
 {
-	var doorL = (product.sectionL - product.plateThick * product.nVplates) / params.quantity - 0.003;
-	var doorH = (product.sectionH - product.plateThick) / segmentParams[i].quantity - product.plateThick - 0.003;
-	var doorPosL = (-product.sectionL / 2 + doorL / 2 + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i;
-	var doorPosH = ((product.sectionH - product.plateThick) / (segmentParams[i].quantity) * (r)) + 0.15 + doorH / 2 + product.plateThick + 0.0015;
+	var doorL = (pdc.sectionL - pdc.plateThk * pdc.nVplates) / params.quantity - 0.003;
+	var doorH = (pdc.sectionH - pdc.plateThk) / segmentParams[i].quantity - pdc.plateThk - 0.003;
+	var doorPosL = (-pdc.sectionL / 2 + doorL / 2 + pdc.plateThk + 0.0015) + (doorL + pdc.plateThk + 0.003) * i;
+	var doorPosH = ((pdc.sectionH - pdc.plateThk) / (segmentParams[i].quantity) * (r)) + 0.15 + doorH / 2 + pdc.plateThk + 0.0015;
 	
 	if (doorL <= 0.6)
 	{
-		product.doorG = new THREE.BoxGeometry(doorL, doorH, product.plateThick);
-		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
-		product.doors[l].position.set(doorPosL, doorPosH, product.sectionW / 2 - product.plateThick / 2);
-		product.doors[l].castShadow = true;
-		scene.add(product.doors[l]);
+		pdc.doorG = new THREE.BoxGeometry(doorL, doorH, pdc.plateThk);
+		pdc.doors[l] = new THREE.Mesh(pdc.doorG, pdc.doorMat);
+		pdc.doors[l].position.set(doorPosL, doorPosH, pdc.sectionW / 2 - pdc.plateThk / 2);
+		pdc.doors[l].castShadow = true;
+		scene.add(pdc.doors[l]);
 		addHandle(doorL, doorPosH, i, l, i, 0);
-		product.plateSquare += doorL * (product.sectionH - product.plateThick);
-		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
+		pdc.plateSquare += doorL * doorH;
+		pdc.plateEdgeLen += (doorL + doorH) * 2;
 		return (1);
 	}
 	else
 	{
-		product.doorG = new THREE.BoxGeometry(doorL / 2 - 0.0015, doorH, product.plateThick);
-		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
-		product.doors[l].position.set(doorPosL - doorL / 4, doorPosH, product.sectionW / 2 - product.plateThick / 2);
-		product.doors[l].castShadow = true;
-		scene.add(product.doors[l]);
+		pdc.doorG = new THREE.BoxGeometry(doorL / 2 - 0.0015, doorH, pdc.plateThk);
+		pdc.doors[l] = new THREE.Mesh(pdc.doorG, pdc.doorMat);
+		pdc.doors[l].position.set(doorPosL - doorL / 4, doorPosH, pdc.sectionW / 2 - pdc.plateThk / 2);
+		pdc.doors[l].castShadow = true;
+		scene.add(pdc.doors[l]);
 		addHandle(doorL, doorPosH, i, l, 0, -(doorL / 2));
+		pdc.plateSquare += (doorL / 2 - 0.0015) * doorH;
+		pdc.plateEdgeLen += ((doorL / 2 - 0.0015) + doorH) * 2;
 		l++;
-		product.plateSquare += doorL * (product.sectionH - product.plateThick);
-		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
-
-		product.doors[l] = new THREE.Mesh(product.doorG, product.doorMat);
-		product.doors[l].position.set(doorPosL + doorL / 4, doorPosH, product.sectionW / 2 - product.plateThick / 2);
-		product.doors[l].castShadow = true;
-		scene.add(product.doors[l]);
+		pdc.doors[l] = new THREE.Mesh(pdc.doorG, pdc.doorMat);
+		pdc.doors[l].position.set(doorPosL + doorL / 4, doorPosH, pdc.sectionW / 2 - pdc.plateThk / 2);
+		pdc.doors[l].castShadow = true;
+		scene.add(pdc.doors[l]);
 		addHandle(doorL, doorPosH, i, l, 1, doorL / 2);
-		l++;
-		product.plateSquare += doorL * (product.sectionH - product.plateThick);
-		product.plateEdgeLen += (doorL + (product.sectionH - product.plateThick)) * 2;
+		pdc.plateSquare += (doorL / 2 - 0.0015) * doorH;
+		pdc.plateEdgeLen += ((doorL / 2 - 0.0015) + doorH) * 2;
 		return (2);
 	}
 }
 
+//lOffset for double doors, handleOffset for right handed and left handed doors
 function addHandle(doorL, doorPosH, i, l, right, lOffset)
 {
 	var handleOffset;
 	var handlePosL, handlePosH, handlePosW;
 
 	if (right == 0)
-		handleOffset = doorL - product.handleOffset;
+		handleOffset = doorL - pdc.handleOffset;
 	else
-		handleOffset = product.handleOffset;
-	handlePosL = (-product.sectionL / 2 + handleOffset + lOffset + product.plateThick + 0.0015) + (doorL + product.plateThick + 0.003) * i;
+		handleOffset = pdc.handleOffset;
+	handlePosL = (-pdc.sectionL / 2 + handleOffset + lOffset + pdc.plateThk + 0.0015) + (doorL + pdc.plateThk + 0.003) * i;
 	handlePosH = doorPosH;
-	handlePosW = product.sectionW / 2;
-	product.handleG = new THREE.BoxGeometry(product.handleL, product.handleH, product.handleW);
-	product.handles[l] = new THREE.Mesh(product.handleG, product.profileMat[product.profileColor]);
-	product.handles[l].position.set(handlePosL, handlePosH, handlePosW);
-	product.handles[l].castWhadow = true;
-	scene.add(product.handles[l]);
+	handlePosW = pdc.sectionW / 2;
+	pdc.handleG = new THREE.BoxGeometry(pdc.handleL, pdc.handleH, pdc.handleW);
+	pdc.handles[l] = new THREE.Mesh(pdc.handleG, pdc.profileMat[pdc.profileColor]);
+	pdc.handles[l].position.set(handlePosL, handlePosH, handlePosW);
+	pdc.handles[l].castWhadow = true;
+	scene.add(pdc.handles[l]);
 }
 
-function addWoodMaterial(index, product, colorMat, mat1, mat2, mat3)
+function addWoodMaterial(index, pdc, colorMat, mat1, mat2, mat3)
 {
-	product.woodMat[index] = new THREE.MeshStandardMaterial( {
+	pdc.woodMat[index] = new THREE.MeshStandardMaterial( {
 		roughness: 0.7,
 		color: colorMat,
 		bumpScale: 0.002,
@@ -272,31 +239,31 @@ function addWoodMaterial(index, product, colorMat, mat1, mat2, mat3)
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( product.l * 2, product.w * 2);
-		product.woodMat[index].map = map;
-		product.woodMat[index].needsUpdate = true;
+		map.repeat.set( pdc.l * 2, pdc.w * 2);
+		pdc.woodMat[index].map = map;
+		pdc.woodMat[index].needsUpdate = true;
 	} );
 	texturesLoader.load( mat2, function( map ) {
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( product.l * 2, product.w * 2);
-		product.woodMat[index].bumpMap = map;
-		product.woodMat[index].needsUpdate = true;
+		map.repeat.set( pdc.l * 2, pdc.w * 2);
+		pdc.woodMat[index].bumpMap = map;
+		pdc.woodMat[index].needsUpdate = true;
 	} );
 	texturesLoader.load( mat3, function( map ) {
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
-		map.repeat.set( product.l * 2, product.w * 2);
-		product.woodMat[index].roghnessMap = map;
-		product.woodMat[index].needsUpdate = true;
+		map.repeat.set( pdc.l * 2, pdc.w * 2);
+		pdc.woodMat[index].roghnessMap = map;
+		pdc.woodMat[index].needsUpdate = true;
 	} );
 }
 
-function addProfileMaterial(index, product, colorMat, metalMat, mat1, mat2, mat3)
+function addProfileMaterial(index, pdc, colorMat, metalMat, mat1, mat2, mat3)
 {
-	product.profileMat[index] = new THREE.MeshStandardMaterial( {
+	pdc.profileMat[index] = new THREE.MeshStandardMaterial( {
 		roughness: 0.0,
 		color: colorMat,
 		bumpScale: 0.002,
@@ -308,64 +275,64 @@ function addProfileMaterial(index, product, colorMat, metalMat, mat1, mat2, mat3
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
 		map.repeat.set( 10, 24 );
-		product.profileMat[index].map = map;
-		product.profileMat[index].needsUpdate = true;
+		pdc.profileMat[index].map = map;
+		pdc.profileMat[index].needsUpdate = true;
 	} );
 	texturesLoader.load( mat2, function( map ) {
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
 		map.repeat.set( 10, 24 );
-		product.profileMat[index].bumpMap = map;
-		product.profileMat[index].needsUpdate = true;
+		pdc.profileMat[index].bumpMap = map;
+		pdc.profileMat[index].needsUpdate = true;
 	} );
 	texturesLoader.load( mat3, function( map ) {
 		map.wrapS = THREE.RepeatWrapping;
 		map.wrapT = THREE.RepeatWrapping;
 		map.anisotropy = 4;
 		map.repeat.set( 10, 24 );
-		product.profileMat[index].roghnessMap = map;
-		product.profileMat[index].needsUpdate = true;
+		pdc.profileMat[index].roghnessMap = map;
+		pdc.profileMat[index].needsUpdate = true;
 	} );
 }
 
-function addProfile(n, l, h, w, product, scene)
+function addProfile(n, l, h, w, pdc, scene)
 {
-	product.profile[n] = new THREE.Mesh(product.profileG, product.profileMat[product.profileColor]);
-	product.profile[n].position.set(l, h, w);
-	product.profile[n].castShadow = true;
-	scene.add(product.profile[n]);
+	pdc.profile[n] = new THREE.Mesh(pdc.profileG, pdc.profileMat[pdc.profileColor]);
+	pdc.profile[n].position.set(l, h, w);
+	pdc.profile[n].castShadow = true;
+	scene.add(pdc.profile[n]);
 }
 
-function delProduct(product, scene)
+function delpdc(pdc, scene)
 {
 	var n = 0;
 
-	while (product.profile[n])
-		scene.remove(product.profile[n++]);
-	scene.remove(product.topW);
+	while (pdc.profile[n])
+		scene.remove(pdc.profile[n++]);
+	scene.remove(pdc.topW);
 	n = 0;
-	while (product.shelfs[n])
-		scene.remove(product.shelfs[n++]);
+	while (pdc.shelfs[n])
+		scene.remove(pdc.shelfs[n++]);
 	n = 0;
-	while (product.platesB[n])
-		scene.remove(product.platesB[n++]);
+	while (pdc.platesB[n])
+		scene.remove(pdc.platesB[n++]);
 	n = 0;
-	while (product.platesV[n])
-		scene.remove(product.platesV[n++]);
+	while (pdc.platesV[n])
+		scene.remove(pdc.platesV[n++]);
 	n = 0;
-	while (product.platesH[n])
-		scene.remove(product.platesH[n++]);
+	while (pdc.platesH[n])
+		scene.remove(pdc.platesH[n++]);
 	n = 0;
-	while (product.doors[n])
-		scene.remove(product.doors[n++]);
+	while (pdc.doors[n])
+		scene.remove(pdc.doors[n++]);
 	n = 0;
-	while (product.handles[n])
-		scene.remove(product.handles[n++]);
-	if (product.plateTopW)
-		scene.remove(product.plateTopW);
-	if (product.plateBotW)
-		scene.remove(product.plateBotW);
+	while (pdc.handles[n])
+		scene.remove(pdc.handles[n++]);
+	if (pdc.plateTopW)
+		scene.remove(pdc.plateTopW);
+	if (pdc.plateBotW)
+		scene.remove(pdc.plateBotW);
 
 	
 }
@@ -410,16 +377,16 @@ function guiAddvSegm(from, to)
 }
 
 
-function renderProduct()
+function renderpdc()
 {
 	var i, j;
 
 	//rewrite
-	product.h = params.h * scale;
-	product.l = params.l * scale;
-	product.w = params.w * scale;
-	product.profileColor = profileColorChoose[params.profileColor];
-	product.woodColor = woodColorChoose[params.woodColor];
+	pdc.h = params.h * scale;
+	pdc.l = params.l * scale;
+	pdc.w = params.w * scale;
+	//pdc.profileColor = profileColorChoose[params.profileColor];
+	//pdc.woodColor = woodColorChoose[params.woodColor];
 
 	i = 0;
 	while (gui.rebuild[i])
@@ -427,8 +394,10 @@ function renderProduct()
 		gui.rebuild[i].onFinishChange(function() {
 			gui.destroy();
 			guiCreate();
-			delProduct(product, scene);
-			addProduct(product, scene);
+			pdc.profileColor = profileColorChoose[params.profileColor];
+			pdc.woodColor = woodColorChoose[params.woodColor];
+			delpdc(pdc, scene);
+			addpdc(pdc, scene);
 		});
 		i++;
 	}
@@ -439,8 +408,8 @@ function renderProduct()
 		gui.sectV[i].onFinishChange(function() {
 			gui.destroy();
 			guiCreate();
-			delProduct(product, scene);
-			addProduct(product, scene);
+			delpdc(pdc, scene);
+			addpdc(pdc, scene);
 		});
 		j = 0;
 		while (gui.sectHn[i][j]) //or gui.sectHn
@@ -448,14 +417,14 @@ function renderProduct()
 			gui.sectHn[i][j].onFinishChange(function() {
 				gui.destroy();
 				guiCreate();
-				delProduct(product, scene);
-				addProduct(product, scene);
+				delpdc(pdc, scene);
+				addpdc(pdc, scene);
 			});
 			gui.sectHo[i][j].onFinishChange(function() {
 				gui.destroy();
 				guiCreate();
-				delProduct(product, scene);
-				addProduct(product, scene);
+				delpdc(pdc, scene);
+				addpdc(pdc, scene);
 			});
 			j++;
 		}
@@ -538,21 +507,21 @@ function guiCreate()
 
 function priceCalc()
 {
-	var topPrice = product.topSquare * 200 * 1.2;
-	var topEdgePrice = product.topEdgeLen * 13 * 1.2;
-	var platePrice = product.plateSquare * 150 * 1.2;
-	var plateEdgePrice = product.plateEdgeLen * 4 * 1.2;
-	profilePrice = profileColorChoose[params.profileColor] == 0 ? 100 : 200;
-	var profileSum = product.profileLen * profilePrice * 1.2;
+	var topPrice = pdc.topSquare * 190 * 1.1;
+	var topEdgePrice = pdc.topEdgeLen * 13 * 1.1;
+	var platePrice = pdc.plateSquare * 140 * 1.1;
+	var plateEdgePrice = pdc.plateEdgeLen * 4 * 1.1;
+	profilePrice = profileColorChoose[params.profileColor] == 0 ? 80 : 100
+	var profileSum = pdc.profileLen * profilePrice * 1.1;
 	var profileFurniture = 40 * 12;
 	var	legs = 20 * 4;
-	var otherFurniture = 40;
+	var otherFurniture = 30;
 	var blumHinges = 0;
 	var blumTandems = 0;
 	var handles = 0;
 	var total = topPrice + platePrice + profileSum + legs + 
 		profileFurniture + topEdgePrice + plateEdgePrice + otherFurniture 
 		+ blumHinges + blumTandems + handles;
-	var coef = 1.6;
+	var coef = 1.5;
 	return (total * coef);
 }
